@@ -309,6 +309,17 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
           <!-- Wordt dynamisch gevuld op basis van reg type -->
         </div>
 
+        <!-- Aanvullende documenten -->
+        <div style="margin-top:0.75rem;">
+          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.4rem;">Aanvullende documenten <span style="font-size:0.62rem;font-weight:500;color:var(--muted);opacity:0.7;text-transform:none;letter-spacing:0;">(optioneel)</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.65rem;line-height:1.5;">Heeft u nog andere documenten die handig kunnen zijn? Voeg ze hier toe.</div>
+          <div id="extra-docs-list"></div>
+          <button type="button" onclick="addExtraDoc()" style="display:flex;align-items:center;gap:0.4rem;width:100%;padding:0.7rem 0.9rem;background:var(--light);border:1.5px dashed var(--border2);border-radius:10px;font-family:var(--font);font-size:0.8rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-top:0.25rem;" id="btnAddExtra" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Document toevoegen
+          </button>
+        </div>
+
         <div class="btn-row">
           <button class="btn btn-back" onclick="toStep1()">&#8592;</button>
           <button class="btn btn-next" onclick="toStep3()" id="btnNext2">Controleren &#8594;</button>
@@ -414,6 +425,8 @@ function setRegType(type){
   document.getElementById('regon-fields').style.display = type==='regon'?'block':'none';
   uploadedFiles = {};
   polisJaNee = null;
+  extraFiles = [];
+  document.getElementById('extra-docs-list').innerHTML = '';
 }
 
 function buildDocGrid(){
@@ -717,6 +730,53 @@ function buildSummary(){
   });
 }
 
+let extraFiles = [];
+
+function addExtraDoc(){
+  const idx = extraFiles.length + 1;
+  extraFiles.push(null);
+  const list = document.getElementById('extra-docs-list');
+  const div = document.createElement('div');
+  div.id = 'extra-item-'+idx;
+  div.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;';
+  div.innerHTML = `
+    <div style="position:relative;flex:1;">
+      <div style="background:var(--light);border:1.5px solid var(--border);border-radius:10px;padding:0.65rem 0.9rem;cursor:pointer;position:relative;overflow:hidden;">
+        <input type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="storeExtra(event,${idx})"
+          style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span id="extra-lbl-${idx}" style="font-size:0.78rem;color:var(--muted);font-weight:500;">Aanvullend document ${idx}</span>
+        </div>
+      </div>
+    </div>
+    <button type="button" onclick="removeExtra(${idx})" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--red-bg);border:1px solid rgba(220,38,38,0.2);border-radius:8px;cursor:pointer;flex-shrink:0;transition:all 0.2s;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>`;
+  list.appendChild(div);
+}
+
+function storeExtra(e, idx){
+  const file = e.target.files[0];
+  if(!file) return;
+  extraFiles[idx-1] = file;
+  const lbl = document.getElementById('extra-lbl-'+idx);
+  if(lbl){
+    lbl.textContent = file.name.length>32?file.name.substring(0,30)+'...':file.name;
+    lbl.style.color = 'var(--green)';
+    lbl.style.fontWeight = '600';
+    // Add green border to parent
+    lbl.closest('[style*="border"]').style.borderColor = 'var(--green)';
+    lbl.closest('[style*="border"]').style.background = 'var(--green-bg)';
+  }
+}
+
+function removeExtra(idx){
+  extraFiles[idx-1] = null;
+  const item = document.getElementById('extra-item-'+idx);
+  if(item) item.remove();
+}
+
 async function submitForm(){
   document.getElementById('step3Btns').style.display='none';
   document.getElementById('sendingWrap').classList.add('show');
@@ -762,6 +822,15 @@ async function submitForm(){
     ['kvkdoc','ceidg','vca','polis','a1'].forEach(k=>{
       if(uploadedFiles[k]&&uploadedFiles[k].name) fd.append(k,uploadedFiles[k],uploadedFiles[k].name);
     });
+    // Extra/aanvullende documenten
+    let extraCount = 0;
+    extraFiles.forEach((f,i)=>{
+      if(f&&f.name){
+        extraCount++;
+        fd.append('extra_'+extraCount, f, f.name);
+      }
+    });
+    fd.append('extra_count', extraCount);
     const resp=await fetch(BACKEND_URL+'/submit',{method:'POST',body:fd});
     const result=await resp.json();
     if(!result.ok) throw new Error(result.error||'Onbekende fout');
