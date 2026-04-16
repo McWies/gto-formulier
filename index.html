@@ -272,8 +272,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
             <div class="err-msg" id="e_kvk">Verplicht (8 cijfers)</div>
           </div>
           <div class="field">
-            <label id="lbl_btw">BTW-nummer <span class="opt" id="lbl_opt1">(optioneel)</span></label>
+            <label id="lbl_btw">BTW-nummer</label>
             <input type="text" id="btwnummer" placeholder="NL123456789B01">
+            <div class="err-msg" id="e_btw">Verplicht</div>
           </div>
         </div>
 
@@ -285,8 +286,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
             <div class="err-msg" id="e_regon">Verplicht (9 of 14 cijfers)</div>
           </div>
           <div class="field">
-            <label id="lbl_nip">NIP-nummer <span class="opt" id="lbl_opt2">(optioneel)</span></label>
+            <label id="lbl_nip">NIP-nummer</label>
             <input type="text" id="nipnummer" placeholder="PL1234567890">
+            <div class="err-msg" id="e_nip">Verplicht</div>
           </div>
         </div>
 
@@ -363,18 +365,19 @@ let lang = 'nl';
 let regType = 'kvk';
 let uploadedFiles = {};
 let idType = 'id';
+let polisJaNee = null;
 
 const DOC_CONFIG = {
   kvk: [
     {key:'kvkdoc', icon:'&#127970;', nameKey:'KvK Uittreksel', subKey:'Uittreksel', datumKey:'kvkdoc_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
     {key:'vca',    icon:'&#9989;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
-    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
     {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
   ],
   regon: [
     {key:'ceidg',  icon:'&#127477;&#127473;', nameKey:'Ceidg document', subKey:'Ceidg', datumKey:'ceidg_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
     {key:'vca',    icon:'&#9989;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
-    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
     {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
     {key:'a1',     icon:'&#128196;', nameKey:'A1 Verklaring',   subKey:'A1', datumKey:'a1_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
   ]
@@ -410,6 +413,7 @@ function setRegType(type){
   document.getElementById('kvk-fields').style.display = type==='kvk'?'block':'none';
   document.getElementById('regon-fields').style.display = type==='regon'?'block':'none';
   uploadedFiles = {};
+  polisJaNee = null;
 }
 
 function buildDocGrid(){
@@ -429,7 +433,39 @@ function buildDocGrid(){
 
     let expandContent = '';
 
-    if(doc.key === 'id'){
+    if(doc.key === 'polis'){
+      expandContent = `
+        <div style="padding-top:0.65rem;">
+          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.5rem;" id="polis-vraag-lbl">Beschikt u over een bedrijfsaansprakelijkheidsverzekering?</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
+            <button class="id-type-btn" id="polisbtn-ja" onclick="setPolisJaNee('ja')">&#10003; Ja</button>
+            <button class="id-type-btn" id="polisbtn-nee" onclick="setPolisJaNee('nee')">&#10005; Nee</button>
+          </div>
+          <div id="polis-upload-section" style="display:none;">
+            <div class="upload-zone" id="zone-polis"
+              ondragover="onDragOver(event,'polis')" ondragleave="onDragLeave('polis')" ondrop="onDrop(event,'polis')">
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFile(event,'polis')">
+              <div class="upload-ico">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <div class="upload-title" id="ztitle-polis">${t.drag}</div>
+              <div class="upload-hint"><b>${t.browse}</b></div>
+            </div>
+            <div class="file-pill" id="pill-polis">
+              <div class="pill-ico"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <span class="pill-name" id="pillname-polis">-</span>
+              <button class="pill-rm" onclick="removeFile('polis')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="datum-field" style="margin-top:0.65rem;">
+              <label>${t.geldig_tot}</label>
+              <input type="date" id="datum-polis" onchange="checkDocComplete('polis')">
+            </div>
+          </div>
+        </div>`;
+    } else if(doc.key === 'id'){
       expandContent = `
         <div class="id-panel">
           <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.4rem;">${t.id_lbl}</div>
@@ -439,7 +475,7 @@ function buildDocGrid(){
           </div>
           <div class="datum-field">
             <label>${t.id_nr}</label>
-            <input type="text" id="id_nummer" placeholder="XX123456789" oninput="updateIdStatus()">
+            <input type="text" id="id_nummer" placeholder="" oninput="updateIdStatus()">
           </div>
           <div class="datum-field">
             <label>${t.id_geldig}</label>
@@ -508,6 +544,28 @@ function setIdType(type){
   document.getElementById('idbtn-id').classList.toggle('active', type==='id');
   document.getElementById('idbtn-passport').classList.toggle('active', type==='passport');
   updateIdStatus();
+}
+
+function setPolisJaNee(keuze){
+  polisJaNee = keuze;
+  document.getElementById('polisbtn-ja').classList.toggle('active', keuze==='ja');
+  document.getElementById('polisbtn-nee').classList.toggle('active', keuze==='nee');
+  const section = document.getElementById('polis-upload-section');
+  if(keuze==='ja'){
+    section.style.display='block';
+  } else {
+    section.style.display='none';
+    // Mark polis as complete (skipped)
+    delete uploadedFiles['polis'];
+    uploadedFiles['polis_nee'] = true;
+    document.getElementById('card-polis').classList.add('uploaded');
+    document.getElementById('dot-polis').style.background='var(--green)';
+    updateCounter();
+  }
+  if(keuze==='ja'){
+    delete uploadedFiles['polis_nee'];
+    checkDocComplete('polis');
+  }
 }
 
 function updateIdStatus(){
@@ -592,9 +650,11 @@ function toStep2(){
   if(regType==='kvk'){
     const kv=val('kvknummer');
     if(!kv||!/^\d{8}$/.test(kv)){show('e_kvk');mark('kvknummer');ok=false;}else{hide('e_kvk');unmark('kvknummer');}
+    if(!val('btwnummer')){show('e_btw');mark('btwnummer');ok=false;}else{hide('e_btw');unmark('btwnummer');}
   } else {
     const rg=val('regonnummer');
     if(!rg||!/^\d{9}(\d{5})?$/.test(rg)){show('e_regon');mark('regonnummer');ok=false;}else{hide('e_regon');unmark('regonnummer');}
+    if(!val('nipnummer')){show('e_nip');mark('nipnummer');ok=false;}else{hide('e_nip');unmark('nipnummer');}
   }
   if(!ok) return;
   buildDocGrid();
@@ -609,6 +669,9 @@ function toStep3(){
       const nr=document.getElementById('id_nummer');
       const gd=document.getElementById('id_geldig');
       return !(nr&&nr.value&&gd&&gd.value);
+    }
+    if(d.key==='polis'){
+      return !polisJaNee; // must choose ja or nee
     }
     const hasFile = uploadedFiles[d.key];
     const datumEl = document.getElementById('datum-'+d.key);
@@ -635,6 +698,13 @@ function buildSummary(){
       const gd=document.getElementById('id_geldig');
       complete=nr&&nr.value&&gd&&gd.value;
       fileLabel=complete?(idType==='id'?t.id_id:t.id_passport)+' · '+nr.value:'—';
+    } else if(d.key==='polis'){
+      if(polisJaNee==='nee'){complete=true;fileLabel='Geen verzekering';}
+      else if(polisJaNee==='ja'){
+        const datumEl=document.getElementById('datum-polis');
+        complete=uploadedFiles['polis']&&datumEl&&datumEl.value;
+        fileLabel=complete?uploadedFiles['polis'].name+' · '+datumEl.value:'—';
+      } else {complete=false;fileLabel='—';}
     } else {
       const datumEl=document.getElementById('datum-'+d.key);
       complete=uploadedFiles[d.key]&&datumEl&&datumEl.value;
@@ -661,6 +731,7 @@ async function submitForm(){
     fd.append('geboortedatum',val('geboortedatum'));
     fd.append('geboorteplaats',val('geboorteplaats'));
     fd.append('reg_type',regType);
+    fd.append('polis_jaornee', polisJaNee||'nee');
     fd.append('kvknummer',val('kvknummer'));
     fd.append('btwnummer',val('btwnummer'));
     fd.append('regonnummer',val('regonnummer'));
