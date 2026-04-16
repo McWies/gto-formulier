@@ -5,310 +5,174 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>GTO Nederland – Monteur Registratie</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root {
-  --bg: #f4f6f9;
-  --card: #ffffff;
-  --border: #e2e8f0;
-  --border2: #cbd5e1;
-  --text: #0f172a;
-  --muted: #64748b;
-  --light: #f8fafc;
-  --accent: #e8401c;
-  --accent-light: #fff1ee;
-  --accent-dark: #c43216;
-  --green: #16a34a;
-  --green-bg: #f0fdf4;
-  --green-border: #bbf7d0;
-  --red: #dc2626;
-  --red-bg: #fef2f2;
-  --blue: #2563eb;
-  --yellow: #d97706;
-  --yellow-bg: #fffbeb;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
-  --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.1);
-  --radius: 14px;
-  --font: 'Plus Jakarta Sans', sans-serif;
+  --bg:#f4f6f9;--card:#fff;--border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--muted:#64748b;--light:#f8fafc;
+  --accent:#e8401c;--accent-light:#fff1ee;--accent-dark:#c43216;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;--blue:#2563eb;
+  --yellow:#d97706;--yellow-bg:#fffbeb;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg:0 4px 6px rgba(0,0,0,0.05),0 10px 40px rgba(0,0,0,0.1);
+  --radius:14px;--font:'Plus Jakarta Sans',sans-serif;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding: 0;
-  position: relative;
-}
-body::before {
-  content: '';
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 280px;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #e8401c15 100%);
-  z-index: 0;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:0;position:relative;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#e8401c15 100%);z-index:0;}
+.page{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 0 3rem;}
+.header{padding:1.5rem 1.25rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.header-logo{display:flex;align-items:center;gap:0.6rem;}
+.logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),#ff6b47);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(232,64,28,0.35);}
+.logo-mark svg{width:19px;height:19px;}
+.logo-text{font-size:0.95rem;font-weight:800;color:#fff;letter-spacing:-0.02em;}
+.logo-sub{font-size:0.62rem;color:rgba(255,255,255,0.55);font-weight:500;margin-top:-1px;}
+.lang-switcher{display:flex;align-items:center;gap:0.35rem;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:100px;padding:0.25rem 0.35rem;}
+.lang-btn{display:flex;align-items:center;gap:0.3rem;padding:0.3rem 0.55rem;border-radius:100px;border:none;background:none;cursor:pointer;font-family:var(--font);font-size:0.72rem;font-weight:600;color:rgba(255,255,255,0.6);transition:all 0.2s;white-space:nowrap;}
+.lang-btn .flag{font-size:1rem;line-height:1;}
+.lang-btn.active{background:rgba(255,255,255,0.18);color:#fff;}
+.lang-btn:hover:not(.active){color:rgba(255,255,255,0.85);}
+.progress-wrap{padding:0 1.25rem 1.25rem;}
+.progress-steps{display:flex;align-items:center;}
+.ps{display:flex;align-items:center;gap:0.4rem;}
+.ps-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);border:1.5px solid rgba(255,255,255,0.15);transition:all 0.3s;flex-shrink:0;}
+.ps-dot.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 12px rgba(232,64,28,0.5);}
+.ps-dot.done{background:var(--green);border-color:var(--green);color:#fff;}
+.ps-label{font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.45);transition:color 0.3s;white-space:nowrap;}
+.ps.active .ps-label{color:rgba(255,255,255,0.9);}
+.ps.done .ps-label{color:rgba(255,255,255,0.6);}
+.ps-line{flex:1;height:1.5px;background:rgba(255,255,255,0.12);margin:0 0.4rem;transition:background 0.4s;}
+.ps-line.done{background:var(--green);}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-lg);margin:0 1rem;overflow:hidden;}
+.card-body{padding:1.5rem 1.25rem 1.75rem;}
+.step-label-top{font-size:0.67rem;font-weight:700;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.25rem;}
+.step-title{font-size:1.3rem;font-weight:800;color:var(--text);letter-spacing:-0.03em;line-height:1.2;margin-bottom:0.3rem;}
+.step-desc{font-size:0.8rem;color:var(--muted);line-height:1.6;margin-bottom:1.4rem;}
+.field{margin-bottom:0.9rem;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;}
+.field label{display:block;font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.3rem;}
+.field label .opt{font-size:0.62rem;color:var(--muted);opacity:0.65;text-transform:none;letter-spacing:0;font-weight:500;margin-left:0.25rem;}
+.field input,.field select{width:100%;padding:0.8rem 0.9rem;background:var(--light);border:1.5px solid var(--border);border-radius:10px;font-family:var(--font);font-size:0.9rem;color:var(--text);outline:none;-webkit-appearance:none;appearance:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,64,28,0.1);background:#fff;}
+.field input::placeholder{color:var(--muted);opacity:0.45;}
+.field input.err-input,.field select.err-input{border-color:var(--red);background:var(--red-bg);}
+.err-msg{font-size:0.7rem;color:var(--red);margin-top:0.28rem;display:none;font-weight:600;}
+.err-msg.show{display:block;}
+.divider{height:1px;background:var(--border);margin:1.1rem 0;}
 
-/* ── Layout ── */
-.page { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 0 3rem; }
+/* Reg type tabs */
+.reg-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;}
+.reg-tab{padding:0.75rem 1rem;border:2px solid var(--border);border-radius:11px;cursor:pointer;text-align:center;transition:all 0.2s;background:var(--light);-webkit-tap-highlight-color:transparent;}
+.reg-tab:hover{border-color:var(--border2);}
+.reg-tab.active{border-color:var(--accent);background:var(--accent-light);}
+.reg-tab-icon{font-size:1.2rem;margin-bottom:0.2rem;}
+.reg-tab-name{font-size:0.82rem;font-weight:700;color:var(--text);display:block;}
+.reg-tab-sub{font-size:0.62rem;color:var(--muted);display:block;margin-top:0.05rem;}
 
-/* ── Header ── */
-.header {
-  padding: 1.5rem 1.25rem 1.25rem;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.header-logo { display: flex; align-items: center; gap: 0.6rem; }
-.logo-mark {
-  width: 38px; height: 38px;
-  background: linear-gradient(135deg, var(--accent), #ff6b47);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(232,64,28,0.35);
-}
-.logo-mark svg { width: 19px; height: 19px; }
-.logo-text { font-size: 0.95rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
-.logo-sub { font-size: 0.62rem; color: rgba(255,255,255,0.55); font-weight: 500; margin-top: -1px; }
+/* Doc cards */
+.doc-counter{font-size:0.75rem;color:var(--muted);margin-bottom:0.8rem;font-weight:500;}
+.doc-counter strong{color:var(--text);font-weight:700;}
+.doc-grid{display:flex;flex-direction:column;gap:0.55rem;margin-bottom:1rem;}
+.doc-card{background:var(--light);border:1.5px solid var(--border);border-radius:11px;overflow:hidden;transition:all 0.2s;}
+.doc-card.uploaded{border-color:var(--green);}
+.doc-card-header{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 0.9rem;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;}
+.doc-card-header:active{background:rgba(0,0,0,0.02);}
+.doc-card.active .doc-card-header{background:var(--accent-light);}
+.doc-card.active{border-color:var(--accent);}
+.doc-card-left{display:flex;align-items:center;gap:0.6rem;}
+.doc-emoji{font-size:1.1rem;}
+.doc-info{}
+.doc-name{font-size:0.8rem;font-weight:700;color:var(--text);display:block;line-height:1.3;}
+.doc-sub{font-size:0.62rem;color:var(--muted);display:block;}
+.doc-right{display:flex;align-items:center;gap:0.5rem;}
+.doc-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;}
+.doc-card.uploaded .doc-dot{background:var(--green);}
+.doc-card.active:not(.uploaded) .doc-dot{background:var(--accent);}
+.doc-badge{font-size:0.57rem;font-weight:700;padding:0.08rem 0.4rem;border-radius:3px;letter-spacing:0.04em;text-transform:uppercase;}
+.badge-req{background:rgba(220,38,38,0.08);color:var(--red);}
+.badge-opt{background:var(--yellow-bg);color:var(--yellow);}
+.doc-expand{display:none;padding:0 0.9rem 0.9rem;border-top:1px solid var(--border);animation:fadeUp 0.2s ease;}
+.doc-card.active .doc-expand{display:block;}
 
-/* ── Language switcher ── */
-.lang-switcher {
-  display: flex; align-items: center; gap: 0.35rem;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 100px;
-  padding: 0.25rem 0.35rem;
-}
-.lang-btn {
-  display: flex; align-items: center; gap: 0.3rem;
-  padding: 0.3rem 0.55rem;
-  border-radius: 100px;
-  border: none; background: none; cursor: pointer;
-  font-family: var(--font); font-size: 0.72rem; font-weight: 600;
-  color: rgba(255,255,255,0.6);
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.lang-btn .flag { font-size: 1rem; line-height: 1; }
-.lang-btn.active {
-  background: rgba(255,255,255,0.18);
-  color: #fff;
-}
-.lang-btn:hover:not(.active) { color: rgba(255,255,255,0.85); }
-
-/* ── Progress strip ── */
-.progress-wrap { padding: 0 1.25rem 1.25rem; }
-.progress-steps { display: flex; align-items: center; }
-.ps { display: flex; align-items: center; gap: 0.4rem; }
-.ps-dot {
-  width: 26px; height: 26px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem; font-weight: 700;
-  background: rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.5);
-  border: 1.5px solid rgba(255,255,255,0.15);
-  transition: all 0.3s; flex-shrink: 0;
-}
-.ps-dot.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 12px rgba(232,64,28,0.5); }
-.ps-dot.done { background: var(--green); border-color: var(--green); color: #fff; }
-.ps-label { font-size: 0.65rem; font-weight: 600; color: rgba(255,255,255,0.45); transition: color 0.3s; white-space: nowrap; }
-.ps.active .ps-label { color: rgba(255,255,255,0.9); }
-.ps.done .ps-label { color: rgba(255,255,255,0.6); }
-.ps-line { flex: 1; height: 1.5px; background: rgba(255,255,255,0.12); margin: 0 0.4rem; transition: background 0.4s; }
-.ps-line.done { background: var(--green); }
-
-/* ── Card ── */
-.card {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  margin: 0 1rem;
-  overflow: hidden;
-}
-.card-body { padding: 1.5rem 1.25rem 1.75rem; }
-
-/* Step title */
-.step-label-top { font-size: 0.67rem; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
-.step-title { font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 0.3rem; }
-.step-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.5rem; }
-
-/* Fields */
-.field { margin-bottom: 0.9rem; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
-.field label {
-  display: block; font-size: 0.68rem; font-weight: 700;
-  color: var(--muted); letter-spacing: 0.06em;
-  text-transform: uppercase; margin-bottom: 0.3rem;
-}
-.field label .opt { font-size: 0.62rem; color: var(--muted); opacity: 0.65; text-transform: none; letter-spacing: 0; font-weight: 500; margin-left: 0.25rem; }
-.field input {
-  width: 100%;
-  padding: 0.8rem 0.9rem;
-  background: var(--light);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  font-family: var(--font); font-size: 0.9rem; color: var(--text);
-  outline: none; -webkit-appearance: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,64,28,0.1); background: #fff; }
-.field input::placeholder { color: var(--muted); opacity: 0.45; }
-.field input.err-input { border-color: var(--red); background: var(--red-bg); }
-.err-msg { font-size: 0.7rem; color: var(--red); margin-top: 0.28rem; display: none; font-weight: 600; }
-.err-msg.show { display: block; }
-.divider { height: 1px; background: var(--border); margin: 1.1rem 0; }
-
-/* Doc grid */
-.doc-counter { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.8rem; font-weight: 500; }
-.doc-counter strong { color: var(--text); font-weight: 700; }
-.doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
-.doc-card {
-  background: var(--light);
-  border: 1.5px solid var(--border);
-  border-radius: 11px;
-  padding: 0.7rem 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.doc-card:active { transform: scale(0.97); }
-.doc-card.active { border-color: var(--accent); background: var(--accent-light); }
-.doc-card.uploaded { border-color: var(--green); background: var(--green-bg); }
-.doc-card.active.uploaded { border-color: var(--accent); background: var(--accent-light); }
-.doc-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3rem; }
-.doc-emoji { font-size: 1rem; }
-.doc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); transition: background 0.2s; }
-.doc-card.uploaded .doc-dot { background: var(--green); }
-.doc-card.active:not(.uploaded) .doc-dot { background: var(--accent); }
-.doc-name { font-size: 0.75rem; font-weight: 700; color: var(--text); display: block; line-height: 1.3; }
-.doc-sub { font-size: 0.61rem; color: var(--muted); display: block; margin-top: 0.05rem; }
-.doc-badge {
-  display: inline-block; font-size: 0.57rem; font-weight: 700;
-  padding: 0.05rem 0.35rem; border-radius: 3px;
-  letter-spacing: 0.04em; text-transform: uppercase; margin-top: 0.25rem;
-}
-.badge-req { background: rgba(220,38,38,0.08); color: var(--red); }
-.badge-opt { background: var(--yellow-bg); color: var(--yellow); }
+/* ID special panel */
+.id-panel{padding:0.75rem 0 0;}
+.id-type-row{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;}
+.id-type-btn{padding:0.6rem;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;text-align:center;background:var(--light);transition:all 0.2s;font-family:var(--font);font-size:0.78rem;font-weight:600;color:var(--muted);}
+.id-type-btn.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
 
 /* Upload zone */
-.upload-zone {
-  border: 2px dashed var(--border2);
-  border-radius: 12px;
-  padding: 1.5rem 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s;
-  position: relative;
-  background: var(--light);
-  margin-bottom: 0.6rem;
-  -webkit-tap-highlight-color: transparent;
-}
-.upload-zone.drag, .upload-zone:hover { border-color: var(--accent); background: var(--accent-light); }
-.upload-zone.has-file { border-style: solid; border-color: var(--green); background: var(--green-bg); }
-.upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.upload-ico { width: 40px; height: 40px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.6rem; box-shadow: var(--shadow); transition: background 0.2s; }
-.upload-zone.has-file .upload-ico { background: var(--green-bg); }
-.upload-title { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.15rem; }
-.upload-hint { font-size: 0.7rem; color: var(--muted); }
-.upload-hint b { color: var(--accent); }
+.upload-zone{border:2px dashed var(--border2);border-radius:10px;padding:1.25rem 1rem;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;background:var(--light);margin-top:0.6rem;-webkit-tap-highlight-color:transparent;}
+.upload-zone.drag,.upload-zone:hover{border-color:var(--accent);background:var(--accent-light);}
+.upload-zone.has-file{border-style:solid;border-color:var(--green);background:var(--green-bg);}
+.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-ico{width:32px;height:32px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 0.45rem;box-shadow:var(--shadow);}
+.upload-title{font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:0.1rem;}
+.upload-hint{font-size:0.65rem;color:var(--muted);}
+.upload-hint b{color:var(--accent);}
+
+/* Datum field inside doc card */
+.datum-field{margin-top:0.65rem;}
+.datum-field label{display:block;font-size:0.66rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.28rem;}
+.datum-field input{width:100%;padding:0.65rem 0.8rem;background:#fff;border:1.5px solid var(--border);border-radius:9px;font-family:var(--font);font-size:0.88rem;color:var(--text);outline:none;transition:border-color 0.2s;}
+.datum-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,64,28,0.1);}
 
 /* File pill */
-.file-pill { display: none; align-items: center; gap: 0.55rem; background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 9px; padding: 0.5rem 0.7rem; margin-bottom: 0.6rem; }
-.file-pill.show { display: flex; }
-.pill-ico { width: 26px; height: 26px; background: rgba(22,163,74,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.pill-name { font-size: 0.76rem; font-weight: 600; color: var(--green); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pill-rm { background: none; border: none; cursor: pointer; color: var(--muted); display: flex; padding: 3px; border-radius: 5px; transition: color 0.2s; }
-.pill-rm:hover { color: var(--red); }
+.file-pill{display:none;align-items:center;gap:0.5rem;background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;padding:0.45rem 0.65rem;margin-top:0.5rem;}
+.file-pill.show{display:flex;}
+.pill-ico{width:22px;height:22px;background:rgba(22,163,74,0.15);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pill-name{font-size:0.72rem;font-weight:600;color:var(--green);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pill-rm{background:none;border:none;cursor:pointer;color:var(--muted);display:flex;padding:2px;border-radius:4px;transition:color 0.2s;}
+.pill-rm:hover{color:var(--red);}
 
 /* Buttons */
-.btn-row { display: flex; gap: 0.6rem; margin-top: 1.5rem; }
-.btn {
-  flex: 1; padding: 0.875rem 1rem;
-  border-radius: 11px; border: none;
-  font-family: var(--font); font-size: 0.88rem; font-weight: 700;
-  cursor: pointer; transition: all 0.2s;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn-back { background: var(--light); color: var(--muted); border: 1.5px solid var(--border); flex: 0 0 auto; padding: 0.875rem 0.9rem; }
-.btn-back:hover { color: var(--text); border-color: var(--border2); }
-.btn-next { background: var(--accent); color: #fff; }
-.btn-next:hover { background: var(--accent-dark); }
-.btn-next:active { transform: scale(0.98); }
-.btn-submit { background: var(--green); color: #fff; }
-.btn-submit:hover { background: #15803d; }
+.btn-row{display:flex;gap:0.6rem;margin-top:1.5rem;}
+.btn{flex:1;padding:0.875rem 1rem;border-radius:11px;border:none;font-family:var(--font);font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
+.btn-back{background:var(--light);color:var(--muted);border:1.5px solid var(--border);flex:0 0 auto;padding:0.875rem 0.9rem;}
+.btn-back:hover{color:var(--text);border-color:var(--border2);}
+.btn-next{background:var(--accent);color:#fff;}
+.btn-next:hover{background:var(--accent-dark);}
+.btn-next:active{transform:scale(0.98);}
+.btn-submit{background:var(--green);color:#fff;}
+.btn-submit:hover{background:#15803d;}
 
 /* Summary */
-.sum-header { display: flex; align-items: center; gap: 0.6rem; background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 0.9rem; margin-bottom: 0.9rem; }
-.sum-name { font-size: 0.85rem; font-weight: 700; color: var(--text); }
-.sum-detail { font-size: 0.7rem; color: var(--muted); margin-top: 0.04rem; }
-.sum-list { list-style: none; }
-.sum-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--border); }
-.sum-item:last-child { border-bottom: none; }
-.sum-check { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.sum-check.ok { background: var(--green-bg); }
-.sum-check.miss { background: var(--red-bg); }
-.sum-check.skip { background: var(--yellow-bg); }
-.sum-doc { flex: 1; }
-.sum-doc-name { font-size: 0.8rem; font-weight: 700; color: var(--text); }
-.sum-doc-file { font-size: 0.68rem; color: var(--muted); margin-top: 0.03rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 230px; }
-.sum-opt { font-size: 0.6rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; text-transform: uppercase; background: var(--yellow-bg); color: var(--yellow); flex-shrink: 0; }
+.sum-header{display:flex;align-items:center;gap:0.6rem;background:var(--light);border:1px solid var(--border);border-radius:10px;padding:0.75rem 0.9rem;margin-bottom:0.9rem;}
+.sum-name{font-size:0.85rem;font-weight:700;color:var(--text);}
+.sum-detail{font-size:0.7rem;color:var(--muted);margin-top:0.04rem;}
+.sum-list{list-style:none;}
+.sum-item{display:flex;align-items:center;gap:0.65rem;padding:0.65rem 0;border-bottom:1px solid var(--border);}
+.sum-item:last-child{border-bottom:none;}
+.sum-check{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sum-check.ok{background:var(--green-bg);}
+.sum-check.miss{background:var(--red-bg);}
+.sum-doc{flex:1;}
+.sum-doc-name{font-size:0.78rem;font-weight:700;color:var(--text);}
+.sum-doc-file{font-size:0.67rem;color:var(--muted);margin-top:0.02rem;}
 
 /* Sending */
-.sending-wrap { display: none; flex-direction: column; align-items: center; padding: 1.75rem 0; gap: 0.9rem; }
-.sending-wrap.show { display: flex; }
-.spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.sending-txt { font-size: 0.83rem; color: var(--muted); font-weight: 500; }
+.sending-wrap{display:none;flex-direction:column;align-items:center;padding:1.75rem 0;gap:0.9rem;}
+.sending-wrap.show{display:flex;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.sending-txt{font-size:0.83rem;color:var(--muted);font-weight:500;}
 
-/* Steps */
-.step { display: none; }
-.step.active { display: block; animation: fadeUp 0.3s ease; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.step{display:none;}
+.step.active{display:block;animation:fadeUp 0.3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* Success */
-.success-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--green-bg); border: 2px solid var(--green-border); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.1rem; animation: pop 0.4s cubic-bezier(0.175,0.885,0.32,1.4); }
-@keyframes pop { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.success-title { font-size: 1.3rem; font-weight: 800; color: var(--text); text-align: center; margin-bottom: 0.4rem; letter-spacing: -0.03em; }
-.success-desc { font-size: 0.82rem; color: var(--muted); text-align: center; line-height: 1.65; max-width: 300px; margin: 0 auto 1.1rem; }
-.success-ref { display: flex; align-items: center; justify-content: center; gap: 0.4rem; background: var(--light); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 1rem; font-size: 0.75rem; color: var(--muted); margin-bottom: 0; }
-.success-ref strong { color: var(--blue); font-weight: 700; }
+.success-icon{width:64px;height:64px;border-radius:50%;background:var(--green-bg);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem;animation:pop 0.4s cubic-bezier(0.175,0.885,0.32,1.4);}
+@keyframes pop{from{transform:scale(0.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-title{font-size:1.3rem;font-weight:800;color:var(--text);text-align:center;margin-bottom:0.4rem;letter-spacing:-0.03em;}
+.success-desc{font-size:0.82rem;color:var(--muted);text-align:center;line-height:1.65;max-width:300px;margin:0 auto 1.1rem;}
+.success-ref{display:flex;align-items:center;justify-content:center;gap:0.4rem;background:var(--light);border:1px solid var(--border);border-radius:8px;padding:0.55rem 1rem;font-size:0.75rem;color:var(--muted);}
+.success-ref strong{color:var(--blue);font-weight:700;}
 
-/* Admin panel */
-.admin-panel { display: none; }
-.admin-panel.show { display: block; }
-.admin-strip {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  padding: 0.9rem 1.25rem;
-  display: flex; align-items: center; gap: 0.6rem;
-}
-.admin-strip-title { font-size: 0.72rem; font-weight: 700; color: var(--yellow); text-transform: uppercase; letter-spacing: 0.08em; }
-.admin-body { padding: 1.1rem 1.25rem 1.5rem; }
-.admin-row { display: flex; align-items: baseline; gap: 0.5rem; padding: 0.32rem 0; border-bottom: 1px solid var(--border); }
-.admin-row:last-of-type { border-bottom: none; }
-.admin-key { font-size: 0.68rem; font-weight: 700; color: var(--muted); min-width: 115px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.04em; }
-.admin-val { font-size: 0.8rem; color: var(--text); font-weight: 600; word-break: break-all; }
-.sp-path { background: var(--light); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.8rem; font-size: 0.68rem; color: var(--blue); font-family: monospace; margin: 0.9rem 0 0.5rem; word-break: break-all; }
-.zip-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.75rem; }
-.btn-zip {
-  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-  width: 100%; padding: 0.875rem; background: var(--accent); color: #fff;
-  border: none; border-radius: 11px; font-family: var(--font); font-size: 0.88rem; font-weight: 700;
-  cursor: pointer; transition: all 0.2s;
-}
-.btn-zip:hover { background: var(--accent-dark); }
-.btn-zip:disabled { background: var(--border2); color: var(--muted); cursor: not-allowed; }
-
-@media (max-width: 380px) {
-  .card-body { padding: 1.25rem 1rem 1.5rem; }
-  .field-row { grid-template-columns: 1fr; }
-  .lang-btn span.lang-txt { display: none; }
-}
+@media(max-width:380px){.card-body{padding:1.25rem 1rem 1.5rem;}.field-row{grid-template-columns:1fr;}.lang-btn span.lang-txt{display:none;}}
 </style>
 </head>
 <body>
 <div class="page">
-
-  <!-- Header -->
   <div class="header">
     <div class="header-logo">
       <div class="logo-mark">
@@ -325,19 +189,12 @@ body::before {
       </div>
     </div>
     <div class="lang-switcher">
-      <button class="lang-btn active" onclick="setLang('nl')" id="btn-nl">
-        <span class="flag">&#127475;&#127473;</span><span class="lang-txt">NL</span>
-      </button>
-      <button class="lang-btn" onclick="setLang('en')" id="btn-en">
-        <span class="flag">&#127468;&#127463;</span><span class="lang-txt">EN</span>
-      </button>
-      <button class="lang-btn" onclick="setLang('pl')" id="btn-pl">
-        <span class="flag">&#127477;&#127473;</span><span class="lang-txt">PL</span>
-      </button>
+      <button class="lang-btn active" onclick="setLang('nl')" id="btn-nl"><span class="flag">&#127475;&#127473;</span><span class="lang-txt">NL</span></button>
+      <button class="lang-btn" onclick="setLang('en')" id="btn-en"><span class="flag">&#127468;&#127463;</span><span class="lang-txt">EN</span></button>
+      <button class="lang-btn" onclick="setLang('pl')" id="btn-pl"><span class="flag">&#127477;&#127473;</span><span class="lang-txt">PL</span></button>
     </div>
   </div>
 
-  <!-- Progress -->
   <div class="progress-wrap" id="progressBar">
     <div class="progress-steps">
       <div class="ps active" id="ps1"><div class="ps-dot active" id="pd1">1</div><span class="ps-label" id="plbl1">Gegevens</span></div>
@@ -348,15 +205,14 @@ body::before {
     </div>
   </div>
 
-  <!-- Card -->
   <div class="card">
     <div class="card-body">
 
-      <!-- ══ STAP 1 ══ -->
+      <!-- STAP 1 -->
       <div class="step active" id="step1">
-        <div class="step-label-top" id="lbl_step1of3">Stap 1 van 3</div>
-        <div class="step-title" id="lbl_title1">Uw gegevens</div>
-        <p class="step-desc" id="lbl_desc1">Vul uw persoonlijke en bedrijfsgegevens in. Alle velden zijn verplicht tenzij anders aangegeven.</p>
+        <div class="step-label-top" id="lbl_s1">Stap 1 van 3</div>
+        <div class="step-title" id="lbl_t1">Uw gegevens</div>
+        <p class="step-desc" id="lbl_d1">Vul uw persoonlijke en bedrijfsgegevens in.</p>
 
         <div class="field-row">
           <div class="field">
@@ -371,6 +227,19 @@ body::before {
           </div>
         </div>
 
+        <div class="field-row">
+          <div class="field">
+            <label id="lbl_geboortedatum">Geboortedatum</label>
+            <input type="date" id="geboortedatum">
+            <div class="err-msg" id="e_gbd">Verplicht</div>
+          </div>
+          <div class="field">
+            <label id="lbl_geboorteplaats">Geboorteplaats</label>
+            <input type="text" id="geboorteplaats" placeholder="Amsterdam">
+            <div class="err-msg" id="e_gbp">Verplicht</div>
+          </div>
+        </div>
+
         <div class="field">
           <label id="lbl_email">E-mailadres</label>
           <input type="email" id="email" placeholder="jan@email.com" autocomplete="email" inputmode="email">
@@ -380,94 +249,75 @@ body::before {
         <div class="divider"></div>
 
         <div class="field">
-          <label id="lbl_kvk">KvK-nummer of REGON-nummer</label>
-          <input type="text" id="kvknummer" placeholder="12345678" maxlength="14" inputmode="numeric">
-          <div class="err-msg" id="e_kvk">Ongeldig nummer (8–14 cijfers)</div>
+          <label id="lbl_regtype">Registratietype</label>
+          <div class="reg-tabs">
+            <div class="reg-tab active" id="tab-kvk" onclick="setRegType('kvk')">
+              <div class="reg-tab-icon">&#127470;&#127473;</div>
+              <span class="reg-tab-name">KvK</span>
+              <span class="reg-tab-sub">Nederland</span>
+            </div>
+            <div class="reg-tab" id="tab-regon" onclick="setRegType('regon')">
+              <div class="reg-tab-icon">&#127477;&#127473;</div>
+              <span class="reg-tab-name">REGON</span>
+              <span class="reg-tab-sub">Polen</span>
+            </div>
+          </div>
         </div>
 
-        <div class="field">
-          <label id="lbl_btw">BTW-nummer of NIP-nummer <span class="opt" id="lbl_optional">(optioneel)</span></label>
-          <input type="text" id="btwnummer" placeholder="NL123456789B01">
+        <!-- KvK velden -->
+        <div id="kvk-fields">
+          <div class="field">
+            <label id="lbl_kvk">KvK-nummer</label>
+            <input type="text" id="kvknummer" placeholder="12345678" maxlength="8" inputmode="numeric">
+            <div class="err-msg" id="e_kvk">Verplicht (8 cijfers)</div>
+          </div>
+          <div class="field">
+            <label id="lbl_btw">BTW-nummer <span class="opt" id="lbl_opt1">(optioneel)</span></label>
+            <input type="text" id="btwnummer" placeholder="NL123456789B01">
+          </div>
+        </div>
+
+        <!-- REGON velden -->
+        <div id="regon-fields" style="display:none;">
+          <div class="field">
+            <label id="lbl_regon">REGON-nummer</label>
+            <input type="text" id="regonnummer" placeholder="123456789" maxlength="14" inputmode="numeric">
+            <div class="err-msg" id="e_regon">Verplicht (9 of 14 cijfers)</div>
+          </div>
+          <div class="field">
+            <label id="lbl_nip">NIP-nummer <span class="opt" id="lbl_opt2">(optioneel)</span></label>
+            <input type="text" id="nipnummer" placeholder="PL1234567890">
+          </div>
         </div>
 
         <div class="btn-row">
-          <button class="btn btn-next" id="btnNext1" onclick="toStep2()">Volgende &#8594;</button>
+          <button class="btn btn-next" onclick="toStep2()" id="btnNext1">Volgende &#8594;</button>
         </div>
       </div>
 
-      <!-- ══ STAP 2 ══ -->
+      <!-- STAP 2 -->
       <div class="step" id="step2">
-        <div class="step-label-top" id="lbl_step2of3">Stap 2 van 3</div>
-        <div class="step-title" id="lbl_title2">Documenten uploaden</div>
-        <p class="step-desc" id="lbl_desc2">Upload alle vier verplichte documenten. Tik op een document om te uploaden.</p>
+        <div class="step-label-top" id="lbl_s2">Stap 2 van 3</div>
+        <div class="step-title" id="lbl_t2">Documenten uploaden</div>
+        <p class="step-desc" id="lbl_d2">Upload alle verplichte documenten en vul de geldigheidsdatums in.</p>
 
-        <div class="doc-counter"><span id="lbl_uploaded">Geüpload:</span> <strong id="uploadCount">0</strong> <span id="lbl_of4">van 4 verplicht</span></div>
+        <div class="doc-counter" id="docCounter">Geüpload: <strong id="uploadCount">0</strong> van <strong id="totalRequired">4</strong></div>
 
-        <div class="doc-grid">
-          <div class="doc-card active" id="tab-kvkdoc" onclick="switchDoc('kvkdoc')">
-            <div class="doc-card-top"><span class="doc-emoji">&#127970;</span><span class="doc-dot"></span></div>
-            <span class="doc-name" id="dn_kvkdoc">KvK / Ceidg</span>
-            <span class="doc-sub" id="ds_kvkdoc">Uittreksel</span>
-            <span class="doc-badge badge-req" id="db_kvkdoc">Verplicht</span>
-          </div>
-          <div class="doc-card" id="tab-vca" onclick="switchDoc('vca')">
-            <div class="doc-card-top"><span class="doc-emoji">&#9989;</span><span class="doc-dot"></span></div>
-            <span class="doc-name" id="dn_vca">VCA</span>
-            <span class="doc-sub" id="ds_vca">Certificaat</span>
-            <span class="doc-badge badge-req" id="db_vca">Verplicht</span>
-          </div>
-          <div class="doc-card" id="tab-polis" onclick="switchDoc('polis')">
-            <div class="doc-card-top"><span class="doc-emoji">&#128203;</span><span class="doc-dot"></span></div>
-            <span class="doc-name" id="dn_polis">Polis</span>
-            <span class="doc-sub" id="ds_polis">Verzekering</span>
-            <span class="doc-badge badge-req" id="db_polis">Verplicht</span>
-          </div>
-          <div class="doc-card" id="tab-id" onclick="switchDoc('id')">
-            <div class="doc-card-top"><span class="doc-emoji">&#129538;</span><span class="doc-dot"></span></div>
-            <span class="doc-name" id="dn_id">ID</span>
-            <span class="doc-sub" id="ds_id">Identiteitsbewijs</span>
-            <span class="doc-badge badge-req" id="db_id">Verplicht</span>
-          </div>
-          <div class="doc-card" id="tab-a1" onclick="switchDoc('a1')" style="grid-column:span 2;">
-            <div class="doc-card-top"><span class="doc-emoji">&#128196;</span><span class="doc-dot"></span></div>
-            <span class="doc-name" id="dn_a1">A1 Verklaring</span>
-            <span class="doc-sub" id="ds_a1">Indien van toepassing</span>
-            <span class="doc-badge badge-opt" id="db_a1">Optioneel</span>
-          </div>
-        </div>
-
-        <div class="upload-zone" id="uploadZone"
-          ondragover="onDragOver(event)" ondragleave="onDragLeave()" ondrop="onDrop(event)">
-          <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFile(event)">
-          <div class="upload-ico">
-            <svg id="uIco" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-          </div>
-          <div class="upload-title" id="lbl_draghere">Sleep bestand hiernaartoe</div>
-          <div class="upload-hint"><b id="lbl_clickbrowse">Tik om te bladeren</b> <span id="lbl_ordrag">of sleep het bestand</span></div>
-          <div style="font-size:0.62rem;color:var(--muted);margin-top:0.3rem;">PDF, JPG, PNG, DOC &middot; Max 10MB</div>
-        </div>
-
-        <div class="file-pill" id="filePill">
-          <div class="pill-ico"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <span class="pill-name" id="pillName">-</span>
-          <button class="pill-rm" onclick="removeFile()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <div class="doc-grid" id="docGrid">
+          <!-- Wordt dynamisch gevuld op basis van reg type -->
         </div>
 
         <div class="btn-row">
-          <button class="btn btn-back" id="btnBack2" onclick="toStep1()">&#8592;</button>
-          <button class="btn btn-next" id="btnNext2" onclick="toStep3()">Controleren &#8594;</button>
+          <button class="btn btn-back" onclick="toStep1()">&#8592;</button>
+          <button class="btn btn-next" onclick="toStep3()" id="btnNext2">Controleren &#8594;</button>
         </div>
       </div>
 
-      <!-- ══ STAP 3 ══ -->
+      <!-- STAP 3 -->
       <div class="step" id="step3">
-        <div class="step-label-top" id="lbl_step3of3">Stap 3 van 3</div>
-        <div class="step-title" id="lbl_title3">Controleer &amp; Verstuur</div>
-        <p class="step-desc" id="lbl_desc3">Controleer uw gegevens voordat u verstuurt naar GTO Nederland.</p>
+        <div class="step-label-top" id="lbl_s3">Stap 3 van 3</div>
+        <div class="step-title" id="lbl_t3">Controleer &amp; Verstuur</div>
+        <p class="step-desc" id="lbl_d3">Controleer uw gegevens voordat u verstuurt.</p>
 
         <div class="sum-header">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -481,12 +331,12 @@ body::before {
         </div>
 
         <div class="btn-row" id="step3Btns">
-          <button class="btn btn-back" id="btnBack3" onclick="toStep2Back()">&#8592;</button>
-          <button class="btn btn-next btn-submit" id="btnSubmit" onclick="submitForm()">&#10003; <span id="lbl_send">Versturen naar GTO</span></button>
+          <button class="btn btn-back" onclick="toStep2Back()">&#8592;</button>
+          <button class="btn btn-next btn-submit" onclick="submitForm()">&#10003; <span id="lbl_send">Versturen naar GTO</span></button>
         </div>
       </div>
 
-      <!-- ══ SUCCESS ══ -->
+      <!-- SUCCESS -->
       <div class="step" id="stepSuccess">
         <div class="success-icon">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -496,383 +346,368 @@ body::before {
         <div class="success-ref"><span id="lbl_ref">Referentie:</span>&nbsp;<strong id="successRef">-</strong></div>
       </div>
 
-    </div><!-- /card-body -->
-
-    <!-- Admin panel buiten card-body maar binnen card -->
-    <div class="admin-panel" id="adminPanel">
-      <div class="admin-strip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        <span class="admin-strip-title">Beheerder – Dossier aanmaken</span>
-      </div>
-      <div class="admin-body">
-        <div id="adminRows"></div>
-        <div class="sp-path" id="adminSpPath">03 Personeel &rarr; 02 Zzp ers &rarr; Actief &rarr; [nr]. Naam</div>
-        <div class="zip-desc" id="zip_desc">De ZIP bevat alle geüploade documenten + Excel overzicht met invulvelden voor KvK-vervaldatum, ID-documentnummer, VCA-geldigheid etc.</div>
-        <button class="btn-zip" id="btnZip" onclick="downloadZip()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span id="zipBtnTxt">ZIP downloaden voor SharePoint</span>
-        </button>
-      </div>
     </div>
-  </div><!-- /card -->
-</div><!-- /page -->
+  </div>
+</div>
 
 <script>
-// ═══════════════════════════════════════
-// CONFIGURATIE
-// Vervang BACKEND_URL met uw Render URL
-// bijv: https://gto-registratie.onrender.com
-// ═══════════════════════════════════════
 const BACKEND_URL = 'https://gto-registratie.onrender.com';
-const ADMIN_PWD   = 'GTO2024';
-// ═══════════════════════════════════════
 
-// ── Vertalingen ──
 const T = {
-  nl: {
-    logoSub:'Monteur Registratie',
-    step1of3:'Stap 1 van 3', step2of3:'Stap 2 van 3', step3of3:'Stap 3 van 3',
-    plbl1:'Gegevens', plbl2:'Documenten', plbl3:'Versturen',
-    title1:'Uw gegevens', title2:'Documenten uploaden', title3:'Controleer & Verstuur',
-    desc1:'Vul uw persoonlijke en bedrijfsgegevens in. Alle velden zijn verplicht tenzij anders aangegeven.',
-    desc2:'Upload alle vier verplichte documenten. Tik op een document om te uploaden.',
-    desc3:'Controleer uw gegevens voordat u verstuurt naar GTO Nederland.',
-    lbl_voornaam:'Voornaam', lbl_achternaam:'Achternaam', lbl_email:'E-mailadres',
-    lbl_kvk:'KvK-nummer of REGON-nummer', lbl_btw:'BTW-nummer of NIP-nummer', lbl_optional:'(optioneel)',
-    lbl_uploaded:'Geüpload:', lbl_of4:'van 4 verplicht',
-    dn_kvkdoc:'KvK / Ceidg', ds_kvkdoc:'Uittreksel', db_kvkdoc:'Verplicht',
-    dn_vca:'VCA', ds_vca:'Certificaat', db_vca:'Verplicht',
-    dn_polis:'Polis', ds_polis:'Verzekering', db_polis:'Verplicht',
-    dn_id:'ID', ds_id:'Identiteitsbewijs', db_id:'Verplicht',
-    dn_a1:'A1 Verklaring', ds_a1:'Indien van toepassing', db_a1:'Optioneel',
-    lbl_draghere:'Sleep bestand hiernaartoe', lbl_clickbrowse:'Tik om te bladeren', lbl_ordrag:'of sleep het bestand',
-    btnNext1:'Volgende →', btnNext2:'Controleren →', btnBack2:'←', btnBack3:'←',
-    lbl_send:'Versturen naar GTO',
-    sendingTxt:'Verzenden naar GTO Nederland...',
-    lbl_success_title:'Aanmelding ontvangen!',
-    successDesc_tpl:'Bedankt, {naam}. GTO Nederland heeft uw aanmelding ontvangen en neemt contact met u op.',
-    lbl_ref:'Referentie:',
-    err_required:'Verplicht veld', err_email:'Ongeldig e-mailadres', err_kvk:'Ongeldig nummer (8–14 cijfers)',
-    alert_missing:'Upload eerst alle verplichte documenten:\n',
-    zip_desc:'De ZIP bevat alle geüploade documenten + Excel overzicht met invulvelden voor KvK-vervaldatum, ID-documentnummer, VCA-geldigheid etc.',
-    zipBtnTxt:'ZIP downloaden voor SharePoint',
-  },
-  en: {
-    logoSub:'Contractor Registration',
-    step1of3:'Step 1 of 3', step2of3:'Step 2 of 3', step3of3:'Step 3 of 3',
-    plbl1:'Details', plbl2:'Documents', plbl3:'Submit',
-    title1:'Your details', title2:'Upload documents', title3:'Review & Submit',
-    desc1:'Please fill in your personal and company details. All fields are required unless stated otherwise.',
-    desc2:'Upload all four required documents. Tap a document to upload.',
-    desc3:'Review your details before submitting to GTO Nederland.',
-    lbl_voornaam:'First name', lbl_achternaam:'Last name', lbl_email:'Email address',
-    lbl_kvk:'KvK number or REGON number', lbl_btw:'VAT number or NIP number', lbl_optional:'(optional)',
-    lbl_uploaded:'Uploaded:', lbl_of4:'of 4 required',
-    dn_kvkdoc:'KvK / Ceidg', ds_kvkdoc:'Extract', db_kvkdoc:'Required',
-    dn_vca:'VCA', ds_vca:'Certificate', db_vca:'Required',
-    dn_polis:'Insurance', ds_polis:'Policy', db_polis:'Required',
-    dn_id:'ID', ds_id:'Identity document', db_id:'Required',
-    dn_a1:'A1 Declaration', ds_a1:'If applicable', db_a1:'Optional',
-    lbl_draghere:'Drop file here', lbl_clickbrowse:'Tap to browse', lbl_ordrag:'or drop your file',
-    btnNext1:'Next →', btnNext2:'Review →', btnBack2:'←', btnBack3:'←',
-    lbl_send:'Submit to GTO',
-    sendingTxt:'Sending to GTO Nederland...',
-    lbl_success_title:'Registration received!',
-    successDesc_tpl:'Thank you, {naam}. GTO Nederland has received your registration and will contact you shortly.',
-    lbl_ref:'Reference:',
-    err_required:'Required', err_email:'Invalid email address', err_kvk:'Invalid number (8–14 digits)',
-    alert_missing:'Please upload all required documents first:\n',
-    zip_desc:'The ZIP contains all uploaded documents + Excel overview with fields for KvK expiry, ID document number, VCA validity etc.',
-    zipBtnTxt:'Download ZIP for SharePoint',
-  },
-  pl: {
-    logoSub:'Rejestracja Montera',
-    step1of3:'Krok 1 z 3', step2of3:'Krok 2 z 3', step3of3:'Krok 3 z 3',
-    plbl1:'Dane', plbl2:'Dokumenty', plbl3:'Wyślij',
-    title1:'Twoje dane', title2:'Prześlij dokumenty', title3:'Sprawdź i wyślij',
-    desc1:'Wypełnij swoje dane osobowe i firmowe. Wszystkie pola są wymagane, chyba że zaznaczono inaczej.',
-    desc2:'Prześlij wszystkie cztery wymagane dokumenty. Dotknij dokumentu, aby go przesłać.',
-    desc3:'Sprawdź swoje dane przed wysłaniem do GTO Nederland.',
-    lbl_voornaam:'Imię', lbl_achternaam:'Nazwisko', lbl_email:'Adres e-mail',
-    lbl_kvk:'Numer KvK lub REGON', lbl_btw:'Numer VAT lub NIP', lbl_optional:'(opcjonalne)',
-    lbl_uploaded:'Przesłano:', lbl_of4:'z 4 wymaganych',
-    dn_kvkdoc:'KvK / Ceidg', ds_kvkdoc:'Wyciąg', db_kvkdoc:'Wymagane',
-    dn_vca:'VCA', ds_vca:'Certyfikat', db_vca:'Wymagane',
-    dn_polis:'Polisa', ds_polis:'Ubezpieczenie', db_polis:'Wymagane',
-    dn_id:'Dowód tożsamości', ds_id:'Dokument tożsamości', db_id:'Wymagane',
-    dn_a1:'Zaświadczenie A1', ds_a1:'Jeśli dotyczy', db_a1:'Opcjonalne',
-    lbl_draghere:'Upuść plik tutaj', lbl_clickbrowse:'Dotknij, aby przeglądać', lbl_ordrag:'lub przeciągnij plik',
-    btnNext1:'Dalej →', btnNext2:'Sprawdź →', btnBack2:'←', btnBack3:'←',
-    lbl_send:'Wyślij do GTO',
-    sendingTxt:'Wysyłanie do GTO Nederland...',
-    lbl_success_title:'Rejestracja otrzymana!',
-    successDesc_tpl:'Dziękujemy, {naam}. GTO Nederland otrzymało Twoją rejestrację i wkrótce się z Tobą skontaktuje.',
-    lbl_ref:'Numer ref.:',
-    err_required:'Pole wymagane', err_email:'Nieprawidłowy adres e-mail', err_kvk:'Nieprawidłowy numer (8–14 cyfr)',
-    alert_missing:'Najpierw prześlij wszystkie wymagane dokumenty:\n',
-    zip_desc:'ZIP zawiera wszystkie przesłane dokumenty + zestawienie Excel z polami na datę ważności KvK, numer dokumentu ID, ważność VCA itp.',
-    zipBtnTxt:'Pobierz ZIP dla SharePoint',
-  }
+  nl:{logoSub:'Monteur Registratie',plbl1:'Gegevens',plbl2:'Documenten',plbl3:'Versturen',lbl_s1:'Stap 1 van 3',lbl_s2:'Stap 2 van 3',lbl_s3:'Stap 3 van 3',lbl_t1:'Uw gegevens',lbl_t2:'Documenten uploaden',lbl_t3:'Controleer & Verstuur',lbl_d1:'Vul uw persoonlijke en bedrijfsgegevens in.',lbl_d2:'Upload alle verplichte documenten en vul de geldigheidsdatums in.',lbl_d3:'Controleer uw gegevens voordat u verstuurt.',lbl_voornaam:'Voornaam',lbl_achternaam:'Achternaam',lbl_geboortedatum:'Geboortedatum',lbl_geboorteplaats:'Geboorteplaats',lbl_email:'E-mailadres',lbl_regtype:'Registratietype',lbl_kvk:'KvK-nummer',lbl_btw:'BTW-nummer',lbl_regon:'REGON-nummer',lbl_nip:'NIP-nummer',lbl_opt1:'(optioneel)',lbl_opt2:'(optioneel)',lbl_send:'Versturen naar GTO',sendingTxt:'Verzenden naar GTO Nederland...',lbl_success_title:'Aanmelding ontvangen!',lbl_ref:'Referentie:',err_req:'Verplicht',err_email:'Ongeldig e-mailadres',err_kvk:'Verplicht (8 cijfers)',err_regon:'Verplicht (9 of 14 cijfers)',drag:'Sleep bestand hiernaartoe',browse:'Tik om te bladeren',uploaded_lbl:'Geüpload:',of_lbl:'van',id_lbl:'Identiteitsbewijs',id_nr:'Documentnummer',id_geldig:'Geldig tot',id_id:'ID kaart',id_passport:'Paspoort',geldig_tot:'Geldig tot',aangeschaft:'Aangeschaft op',alert_missing:'Upload eerst alle verplichte documenten:\n',successDesc_tpl:'Bedankt, {naam}. GTO Nederland heeft uw aanmelding ontvangen en neemt contact met u op.'},
+  en:{logoSub:'Contractor Registration',plbl1:'Details',plbl2:'Documents',plbl3:'Submit',lbl_s1:'Step 1 of 3',lbl_s2:'Step 2 of 3',lbl_s3:'Step 3 of 3',lbl_t1:'Your details',lbl_t2:'Upload documents',lbl_t3:'Review & Submit',lbl_d1:'Please fill in your personal and company details.',lbl_d2:'Upload all required documents and fill in validity dates.',lbl_d3:'Review your details before submitting.',lbl_voornaam:'First name',lbl_achternaam:'Last name',lbl_geboortedatum:'Date of birth',lbl_geboorteplaats:'Place of birth',lbl_email:'Email address',lbl_regtype:'Registration type',lbl_kvk:'KvK number',lbl_btw:'VAT number',lbl_regon:'REGON number',lbl_nip:'NIP number',lbl_opt1:'(optional)',lbl_opt2:'(optional)',lbl_send:'Submit to GTO',sendingTxt:'Sending to GTO Nederland...',lbl_success_title:'Registration received!',lbl_ref:'Reference:',err_req:'Required',err_email:'Invalid email address',err_kvk:'Required (8 digits)',err_regon:'Required (9 or 14 digits)',drag:'Drop file here',browse:'Tap to browse',uploaded_lbl:'Uploaded:',of_lbl:'of',id_lbl:'Identity document',id_nr:'Document number',id_geldig:'Valid until',id_id:'ID card',id_passport:'Passport',geldig_tot:'Valid until',aangeschaft:'Purchased on',alert_missing:'Please upload all required documents first:\n',successDesc_tpl:'Thank you, {naam}. GTO Nederland has received your registration.'},
+  pl:{logoSub:'Rejestracja Montera',plbl1:'Dane',plbl2:'Dokumenty',plbl3:'Wyślij',lbl_s1:'Krok 1 z 3',lbl_s2:'Krok 2 z 3',lbl_s3:'Krok 3 z 3',lbl_t1:'Twoje dane',lbl_t2:'Prześlij dokumenty',lbl_t3:'Sprawdź i wyślij',lbl_d1:'Wypełnij swoje dane osobowe i firmowe.',lbl_d2:'Prześlij wszystkie wymagane dokumenty i podaj daty ważności.',lbl_d3:'Sprawdź swoje dane przed wysłaniem.',lbl_voornaam:'Imię',lbl_achternaam:'Nazwisko',lbl_geboortedatum:'Data urodzenia',lbl_geboorteplaats:'Miejsce urodzenia',lbl_email:'Adres e-mail',lbl_regtype:'Typ rejestracji',lbl_kvk:'Numer KvK',lbl_btw:'Numer VAT',lbl_regon:'Numer REGON',lbl_nip:'Numer NIP',lbl_opt1:'(opcjonalne)',lbl_opt2:'(opcjonalne)',lbl_send:'Wyślij do GTO',sendingTxt:'Wysyłanie do GTO Nederland...',lbl_success_title:'Rejestracja otrzymana!',lbl_ref:'Numer ref.:',err_req:'Wymagane',err_email:'Nieprawidłowy adres e-mail',err_kvk:'Wymagane (8 cyfr)',err_regon:'Wymagane (9 lub 14 cyfr)',drag:'Upuść plik tutaj',browse:'Dotknij, aby przeglądać',uploaded_lbl:'Przesłano:',of_lbl:'z',id_lbl:'Dokument tożsamości',id_nr:'Numer dokumentu',id_geldig:'Ważny do',id_id:'Dowód osobisty',id_passport:'Paszport',geldig_tot:'Ważny do',aangeschaft:'Zakupiono dnia',alert_missing:'Najpierw prześlij wszystkie wymagane dokumenty:\n',successDesc_tpl:'Dziękujemy, {naam}. GTO Nederland otrzymało Twoją rejestrację.'}
 };
 
 let lang = 'nl';
-const DOCS = ['kvkdoc','vca','polis','id','a1'];
-const DOC_KEYS = { kvkdoc:'kvkdoc', vca:'vca', polis:'polis', id:'id', a1:'a1' };
-const DOC_FILENAME = { kvkdoc:'KvK_Ceidg', vca:'VCA', polis:'Polis', id:'ID', a1:'A1' };
-const DOC_REQUIRED = { kvkdoc:true, vca:true, polis:true, id:true, a1:false };
+let regType = 'kvk';
+let uploadedFiles = {};
+let idType = 'id';
 
-let uploadedFiles = {kvkdoc:null,vca:null,polis:null,id:null,a1:null};
-let activeDoc = 'kvkdoc';
-let savedData = {};
-let isAdmin = false;
+const DOC_CONFIG = {
+  kvk: [
+    {key:'kvkdoc', icon:'&#127970;', nameKey:'KvK Uittreksel', subKey:'Uittreksel', datumKey:'kvkdoc_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
+    {key:'vca',    icon:'&#9989;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
+  ],
+  regon: [
+    {key:'ceidg',  icon:'&#127477;&#127473;', nameKey:'Ceidg document', subKey:'Ceidg', datumKey:'ceidg_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
+    {key:'vca',    icon:'&#9989;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
+    {key:'a1',     icon:'&#128196;', nameKey:'A1 Verklaring',   subKey:'A1', datumKey:'a1_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
+  ]
+};
 
-// Check admin
 (function(){
   const p = new URLSearchParams(window.location.search);
-  if(p.get('admin') === ADMIN_PWD) isAdmin = true;
   const l = p.get('lang');
   if(l && T[l]) setLang(l, true);
 })();
 
-function setLang(l, silent) {
+function setLang(l, silent){
   lang = l;
-  ['nl','en','pl'].forEach(x => document.getElementById('btn-'+x).classList.toggle('active', x===l));
+  ['nl','en','pl'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===l));
   const t = T[l];
-  // Apply all translations
-  const ids = ['logoSub','lbl_step1of3','lbl_step2of3','lbl_step3of3','plbl1','plbl2','plbl3',
-    'lbl_title1','lbl_title2','lbl_title3','lbl_desc1','lbl_desc2','lbl_desc3',
-    'lbl_voornaam','lbl_achternaam','lbl_email','lbl_kvk','lbl_btw','lbl_optional',
-    'lbl_uploaded','lbl_of4',
-    'dn_kvkdoc','ds_kvkdoc','db_kvkdoc','dn_vca','ds_vca','db_vca',
-    'dn_polis','ds_polis','db_polis','dn_id','ds_id','db_id','dn_a1','ds_a1','db_a1',
-    'lbl_draghere','lbl_clickbrowse','lbl_ordrag',
-    'btnNext1','btnNext2','lbl_send','sendingTxt','lbl_success_title','lbl_ref',
-    'zip_desc','zipBtnTxt'
-  ];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if(el && t[id] !== undefined) el.textContent = t[id];
-  });
-  // Error messages
-  document.getElementById('e_vnaam').textContent = t.err_required;
-  document.getElementById('e_anaam').textContent = t.err_required;
-  document.getElementById('e_email').textContent = t.err_email;
-  document.getElementById('e_kvk').textContent = t.err_kvk;
-  // HTML lang
-  document.documentElement.lang = l;
+  const ids = ['logoSub','plbl1','plbl2','plbl3','lbl_s1','lbl_s2','lbl_s3','lbl_t1','lbl_t2','lbl_t3','lbl_d1','lbl_d2','lbl_d3','lbl_voornaam','lbl_achternaam','lbl_geboortedatum','lbl_geboorteplaats','lbl_email','lbl_regtype','lbl_kvk','lbl_btw','lbl_regon','lbl_nip','lbl_opt1','lbl_opt2','lbl_send','sendingTxt','lbl_success_title','lbl_ref'];
+  ids.forEach(id=>{const el=document.getElementById(id);if(el&&t[id]!==undefined)el.textContent=t[id];});
+  document.getElementById('e_vnaam').textContent=t.err_req;
+  document.getElementById('e_anaam').textContent=t.err_req;
+  document.getElementById('e_gbd').textContent=t.err_req;
+  document.getElementById('e_gbp').textContent=t.err_req;
+  document.getElementById('e_email').textContent=t.err_email;
+  document.getElementById('e_kvk').textContent=t.err_kvk;
+  document.getElementById('e_regon').textContent=t.err_regon;
+  document.documentElement.lang=l;
+  if(!silent) buildDocGrid();
 }
 
-// ── Navigation ──
+function setRegType(type){
+  regType = type;
+  document.getElementById('tab-kvk').classList.toggle('active', type==='kvk');
+  document.getElementById('tab-regon').classList.toggle('active', type==='regon');
+  document.getElementById('kvk-fields').style.display = type==='kvk'?'block':'none';
+  document.getElementById('regon-fields').style.display = type==='regon'?'block':'none';
+  uploadedFiles = {};
+}
+
+function buildDocGrid(){
+  const t = T[lang];
+  const docs = DOC_CONFIG[regType];
+  const grid = document.getElementById('docGrid');
+  grid.innerHTML = '';
+  let reqCount = docs.filter(d=>d.required).length;
+  document.getElementById('totalRequired').textContent = reqCount;
+
+  docs.forEach(doc => {
+    const card = document.createElement('div');
+    card.className = 'doc-card';
+    card.id = 'card-'+doc.key;
+
+    const datumLabelText = doc.datumLabel === 'aangeschaft' ? t.aangeschaft : t.geldig_tot;
+
+    let expandContent = '';
+
+    if(doc.key === 'id'){
+      expandContent = `
+        <div class="id-panel">
+          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.4rem;">${t.id_lbl}</div>
+          <div class="id-type-row">
+            <button class="id-type-btn active" id="idbtn-id" onclick="setIdType('id')">&#129538; ${t.id_id}</button>
+            <button class="id-type-btn" id="idbtn-passport" onclick="setIdType('passport')">&#128210; ${t.id_passport}</button>
+          </div>
+          <div class="datum-field">
+            <label>${t.id_nr}</label>
+            <input type="text" id="id_nummer" placeholder="XX123456789" oninput="updateIdStatus()">
+          </div>
+          <div class="datum-field">
+            <label>${t.id_geldig}</label>
+            <input type="date" id="id_geldig" onchange="updateIdStatus()">
+          </div>
+        </div>`;
+    } else {
+      expandContent = `
+        <div class="upload-zone" id="zone-${doc.key}"
+          ondragover="onDragOver(event,'${doc.key}')" ondragleave="onDragLeave('${doc.key}')" ondrop="onDrop(event,'${doc.key}')">
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFile(event,'${doc.key}')">
+          <div class="upload-ico">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <div class="upload-title" id="ztitle-${doc.key}">${t.drag}</div>
+          <div class="upload-hint"><b>${t.browse}</b></div>
+        </div>
+        <div class="file-pill" id="pill-${doc.key}">
+          <div class="pill-ico"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="pill-name" id="pillname-${doc.key}">-</span>
+          <button class="pill-rm" onclick="removeFile('${doc.key}')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="datum-field" style="margin-top:0.65rem;">
+          <label>${datumLabelText}</label>
+          <input type="date" id="datum-${doc.key}" onchange="checkDocComplete('${doc.key}')">
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="doc-card-header" onclick="toggleDoc('${doc.key}')">
+        <div class="doc-card-left">
+          <span class="doc-emoji">${doc.icon}</span>
+          <div class="doc-info">
+            <span class="doc-name">${doc.nameKey}</span>
+            <span class="doc-sub">${doc.subKey}</span>
+          </div>
+        </div>
+        <div class="doc-right">
+          <span class="doc-badge badge-req">${t.err_req.replace('Verplicht','Verplicht').replace('Required','Required').replace('Wymagane','Wymagane')}</span>
+          <div class="doc-dot" id="dot-${doc.key}"></div>
+        </div>
+      </div>
+      <div class="doc-expand">${expandContent}</div>`;
+
+    grid.appendChild(card);
+  });
+
+  // Open first card by default
+  if(docs.length > 0) toggleDoc(docs[0].key);
+  updateCounter();
+}
+
+function toggleDoc(key){
+  const docs = DOC_CONFIG[regType];
+  docs.forEach(d=>{
+    const card = document.getElementById('card-'+d.key);
+    if(card) card.classList.toggle('active', d.key===key);
+  });
+}
+
+function setIdType(type){
+  idType = type;
+  document.getElementById('idbtn-id').classList.toggle('active', type==='id');
+  document.getElementById('idbtn-passport').classList.toggle('active', type==='passport');
+  updateIdStatus();
+}
+
+function updateIdStatus(){
+  const nr = document.getElementById('id_nummer');
+  const gd = document.getElementById('id_geldig');
+  if(nr && gd && nr.value && gd.value){
+    uploadedFiles['id'] = {filename:'id', content:null};
+    document.getElementById('card-id').classList.add('uploaded');
+    document.getElementById('dot-id').style.background='var(--green)';
+    updateCounter();
+  } else {
+    delete uploadedFiles['id'];
+    document.getElementById('card-id').classList.remove('uploaded');
+    document.getElementById('dot-id').style.background='';
+    updateCounter();
+  }
+}
+
+function handleFile(e, key){
+  if(e.target.files[0]) storeFile(e.target.files[0], key);
+}
+function onDragOver(e,key){e.preventDefault();document.getElementById('zone-'+key).classList.add('drag');}
+function onDragLeave(key){document.getElementById('zone-'+key).classList.remove('drag');}
+function onDrop(e,key){e.preventDefault();document.getElementById('zone-'+key).classList.remove('drag');if(e.dataTransfer.files[0])storeFile(e.dataTransfer.files[0],key);}
+
+function storeFile(file, key){
+  uploadedFiles[key] = file;
+  const zone = document.getElementById('zone-'+key);
+  const pill = document.getElementById('pill-'+key);
+  const title = document.getElementById('ztitle-'+key);
+  zone.classList.add('has-file');
+  pill.classList.add('show');
+  document.getElementById('pillname-'+key).textContent = file.name;
+  if(title) title.textContent = file.name.length>28?file.name.substring(0,26)+'...':file.name;
+  checkDocComplete(key);
+}
+
+function removeFile(key){
+  delete uploadedFiles[key];
+  const zone = document.getElementById('zone-'+key);
+  const pill = document.getElementById('pill-'+key);
+  const t = T[lang];
+  zone.classList.remove('has-file');
+  pill.classList.remove('show');
+  const title = document.getElementById('ztitle-'+key);
+  if(title) title.textContent = t.drag;
+  zone.querySelector('input').value = '';
+  checkDocComplete(key);
+}
+
+function checkDocComplete(key){
+  const hasFile = uploadedFiles[key] && uploadedFiles[key] !== null;
+  const datumEl = document.getElementById('datum-'+key);
+  const hasDatum = datumEl && datumEl.value;
+  const complete = hasFile && hasDatum;
+  const card = document.getElementById('card-'+key);
+  const dot = document.getElementById('dot-'+key);
+  if(card) card.classList.toggle('uploaded', complete);
+  if(dot) dot.style.background = complete ? 'var(--green)' : '';
+  updateCounter();
+}
+
+function updateCounter(){
+  const docs = DOC_CONFIG[regType];
+  const count = docs.filter(d=>{
+    if(d.key==='id') return uploadedFiles['id'];
+    const hasFile = uploadedFiles[d.key];
+    const datumEl = document.getElementById('datum-'+d.key);
+    return hasFile && datumEl && datumEl.value;
+  }).length;
+  document.getElementById('uploadCount').textContent = count;
+}
+
 function toStep2(){
   let ok=true;
   ok=req('voornaam','e_vnaam')&&ok;
   ok=req('achternaam','e_anaam')&&ok;
+  ok=req('geboortedatum','e_gbd')&&ok;
+  ok=req('geboorteplaats','e_gbp')&&ok;
   const em=val('email');
   if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){show('e_email');mark('email');ok=false;}else{hide('e_email');unmark('email');}
-  const kv=val('kvknummer');
-  if(!kv||!/^\d{8,14}$/.test(kv)){show('e_kvk');mark('kvknummer');ok=false;}else{hide('e_kvk');unmark('kvknummer');}
-  if(!ok)return;
-  setStep(2);setProg(2);switchDoc('kvkdoc');
+  if(regType==='kvk'){
+    const kv=val('kvknummer');
+    if(!kv||!/^\d{8}$/.test(kv)){show('e_kvk');mark('kvknummer');ok=false;}else{hide('e_kvk');unmark('kvknummer');}
+  } else {
+    const rg=val('regonnummer');
+    if(!rg||!/^\d{9}(\d{5})?$/.test(rg)){show('e_regon');mark('regonnummer');ok=false;}else{hide('e_regon');unmark('regonnummer');}
+  }
+  if(!ok) return;
+  buildDocGrid();
+  setStep(2); setProg(2);
 }
 function toStep1(){setStep(1);setProg(1);}
 function toStep3(){
-  const missing=DOCS.filter(d=>DOC_REQUIRED[d]&&!uploadedFiles[d]);
-  if(missing.length){alert(T[lang].alert_missing+missing.map(d=>'- '+document.getElementById('dn_'+d).textContent).join('\n'));return;}
-  setStep(3);setProg(3);buildSummary();
+  const t = T[lang];
+  const docs = DOC_CONFIG[regType];
+  const missing = docs.filter(d=>{
+    if(d.key==='id'){
+      const nr=document.getElementById('id_nummer');
+      const gd=document.getElementById('id_geldig');
+      return !(nr&&nr.value&&gd&&gd.value);
+    }
+    const hasFile = uploadedFiles[d.key];
+    const datumEl = document.getElementById('datum-'+d.key);
+    return !(hasFile && datumEl && datumEl.value);
+  });
+  if(missing.length){alert(t.alert_missing+missing.map(d=>'- '+d.nameKey).join('\n'));return;}
+  buildSummary();
+  setStep(3); setProg(3);
 }
-function toStep2Back(){setStep(2);setProg(2);refreshZone();}
+function toStep2Back(){setStep(2);setProg(2);}
 
-// ── Docs ──
-function switchDoc(id){
-  activeDoc=id;
-  DOCS.forEach(d=>document.getElementById('tab-'+d).classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  refreshZone();
-}
-function refreshZone(){
-  const zone=document.getElementById('uploadZone'),pill=document.getElementById('filePill');
-  document.getElementById('fileInput').value='';
-  const f=uploadedFiles[activeDoc];
-  if(f){
-    zone.classList.add('has-file');pill.classList.add('show');
-    document.getElementById('pillName').textContent=f.name;
-    document.getElementById('lbl_draghere').textContent=f.name.length>30?f.name.substring(0,28)+'...':f.name;
-    document.getElementById('uIco').innerHTML='<polyline points="20 6 9 17 4 12" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"/>';
-  }else{
-    zone.classList.remove('has-file');pill.classList.remove('show');
-    document.getElementById('lbl_draghere').textContent=T[lang].lbl_draghere;
-    document.getElementById('uIco').innerHTML='<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>';
-  }
-}
-function handleFile(e){if(e.target.files[0])storeFile(e.target.files[0]);}
-function onDragOver(e){e.preventDefault();document.getElementById('uploadZone').classList.add('drag');}
-function onDragLeave(){document.getElementById('uploadZone').classList.remove('drag');}
-function onDrop(e){e.preventDefault();document.getElementById('uploadZone').classList.remove('drag');if(e.dataTransfer.files[0])storeFile(e.dataTransfer.files[0]);}
-function storeFile(f){
-  uploadedFiles[activeDoc]=f;
-  document.getElementById('tab-'+activeDoc).classList.add('uploaded');
-  refreshZone();updateCounter();
-}
-function removeFile(){
-  uploadedFiles[activeDoc]=null;
-  document.getElementById('tab-'+activeDoc).classList.remove('uploaded');
-  refreshZone();updateCounter();
-}
-function updateCounter(){
-  document.getElementById('uploadCount').textContent=DOCS.filter(d=>DOC_REQUIRED[d]&&uploadedFiles[d]).length;
-}
-
-// ── Summary ──
 function buildSummary(){
-  const fn=val('voornaam'),an=val('achternaam'),em=val('email'),kv=val('kvknummer'),btw=val('btwnummer');
+  const t = T[lang];
+  const fn=val('voornaam'),an=val('achternaam'),em=val('email');
   document.getElementById('sumName').textContent=fn+' '+an;
-  document.getElementById('sumDetail').textContent=em+(kv?' · '+kv:'')+(btw?' · '+btw:'');
+  const numVal = regType==='kvk'?val('kvknummer'):val('regonnummer');
+  document.getElementById('sumDetail').textContent=em+' · '+(regType==='kvk'?'KvK':'REGON')+': '+numVal;
   const list=document.getElementById('sumList');list.innerHTML='';
-  DOCS.forEach(d=>{
-    const f=uploadedFiles[d],req=DOC_REQUIRED[d];
-    const cc=f?'ok':(!req?'skip':'miss');
-    const ic=f?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>'
-      :(!req?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>'
-      :'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>');
-    const docLabel=document.getElementById('dn_'+d).textContent;
-    const fileLabel=f?f.name:(req?'—':'—');
+  const docs = DOC_CONFIG[regType];
+  docs.forEach(d=>{
+    let complete, fileLabel;
+    if(d.key==='id'){
+      const nr=document.getElementById('id_nummer');
+      const gd=document.getElementById('id_geldig');
+      complete=nr&&nr.value&&gd&&gd.value;
+      fileLabel=complete?(idType==='id'?t.id_id:t.id_passport)+' · '+nr.value:'—';
+    } else {
+      const datumEl=document.getElementById('datum-'+d.key);
+      complete=uploadedFiles[d.key]&&datumEl&&datumEl.value;
+      fileLabel=complete?uploadedFiles[d.key].name+(datumEl?' · '+datumEl.value:''):'—';
+    }
+    const ic=complete?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
     const li=document.createElement('li');li.className='sum-item';
-    li.innerHTML='<div class="sum-check '+cc+'">'+ic+'</div><div class="sum-doc"><div class="sum-doc-name">'+docLabel+'</div><div class="sum-doc-file">'+fileLabel+'</div></div>'+(!req?'<span class="sum-opt">'+T[lang].db_a1+'</span>':'');
+    li.innerHTML='<div class="sum-check '+(complete?'ok':'miss')+'">'+ic+'</div><div class="sum-doc"><div class="sum-doc-name">'+d.nameKey+'</div><div class="sum-doc-file">'+fileLabel+'</div></div>';
     list.appendChild(li);
   });
 }
 
-// ── Submit ──
 async function submitForm(){
   document.getElementById('step3Btns').style.display='none';
   document.getElementById('sendingWrap').classList.add('show');
   document.getElementById('sendingTxt').textContent=T[lang].sendingTxt;
   const now=new Date();
   const ref='GTO-'+now.getFullYear()+('0'+(now.getMonth()+1)).slice(-2)+('0'+now.getDate()).slice(-2)+'-'+Math.floor(1000+Math.random()*9000);
-  savedData={
-    voornaam:val('voornaam'),achternaam:val('achternaam'),email:val('email'),
-    kvknummer:val('kvknummer'),btwnummer:val('btwnummer')||'—',
-    referentie:ref,lang,
-    datum:now.toLocaleDateString('nl-NL',{day:'2-digit',month:'long',year:'numeric'}),
-    tijd:now.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})
-  };
-  // Stuur naar backend via FormData
   try{
     const fd=new FormData();
-    fd.append('voornaam',savedData.voornaam);
-    fd.append('achternaam',savedData.achternaam);
-    fd.append('email',savedData.email);
-    fd.append('kvknummer',savedData.kvknummer);
-    fd.append('btwnummer',savedData.btwnummer);
+    fd.append('voornaam',val('voornaam'));
+    fd.append('achternaam',val('achternaam'));
+    fd.append('email',val('email'));
+    fd.append('geboortedatum',val('geboortedatum'));
+    fd.append('geboorteplaats',val('geboorteplaats'));
+    fd.append('reg_type',regType);
+    fd.append('kvknummer',val('kvknummer'));
+    fd.append('btwnummer',val('btwnummer'));
+    fd.append('regonnummer',val('regonnummer'));
+    fd.append('nipnummer',val('nipnummer'));
+    fd.append('id_type',idType);
+    fd.append('id_nummer',document.getElementById('id_nummer')?document.getElementById('id_nummer').value:'');
+    fd.append('id_geldig',document.getElementById('id_geldig')?document.getElementById('id_geldig').value:'');
     fd.append('referentie',ref);
     fd.append('lang',lang);
-    DOCS.forEach(d=>{if(uploadedFiles[d])fd.append(d,uploadedFiles[d],uploadedFiles[d].name);});
+    // Datums
+    const datumFields=['kvkdoc_datum','ceidg_datum','vca_geldig','polis_geldig','a1_geldig'];
+    const datumDocKeys=['kvkdoc','ceidg','vca','polis','a1'];
+    datumDocKeys.forEach(k=>{
+      const el=document.getElementById('datum-'+k);
+      if(el) fd.append(k+'_datum'||k+'_geldig', el.value);
+    });
+    // Specific datum field names for backend
+    ['kvkdoc','ceidg','vca','polis','a1'].forEach(k=>{
+      const el=document.getElementById('datum-'+k);
+      if(!el) return;
+      if(k==='kvkdoc') fd.set('kvkdoc_datum', el.value);
+      else if(k==='ceidg') fd.set('ceidg_datum', el.value);
+      else if(k==='vca') fd.set('vca_geldig', el.value);
+      else if(k==='polis') fd.set('polis_geldig', el.value);
+      else if(k==='a1') fd.set('a1_geldig', el.value);
+    });
+    // Files
+    ['kvkdoc','ceidg','vca','polis','a1'].forEach(k=>{
+      if(uploadedFiles[k]&&uploadedFiles[k].name) fd.append(k,uploadedFiles[k],uploadedFiles[k].name);
+    });
     const resp=await fetch(BACKEND_URL+'/submit',{method:'POST',body:fd});
     const result=await resp.json();
     if(!result.ok) throw new Error(result.error||'Onbekende fout');
+    document.getElementById('sendingWrap').classList.remove('show');
+    document.getElementById('lbl_success_title').textContent=T[lang].lbl_success_title;
+    document.getElementById('successDesc').textContent=T[lang].successDesc_tpl.replace('{naam}',val('voornaam'));
+    document.getElementById('lbl_ref').textContent=T[lang].lbl_ref;
+    document.getElementById('successRef').textContent=ref;
+    setStep('success');
+    document.getElementById('progressBar').style.display='none';
   }catch(e){
     document.getElementById('sendingWrap').classList.remove('show');
     document.getElementById('step3Btns').style.display='flex';
-    alert('Fout bij verzenden: '+e.message+'\n\nProbeer het opnieuw of neem contact op met GTO Nederland.');
-    return;
-  }
-  document.getElementById('sendingWrap').classList.remove('show');
-  const naam=savedData.voornaam+' '+savedData.achternaam;
-  document.getElementById('lbl_success_title').textContent=T[lang].lbl_success_title;
-  document.getElementById('successDesc').textContent=T[lang].successDesc_tpl.replace('{naam}',savedData.voornaam);
-  document.getElementById('lbl_ref').textContent=T[lang].lbl_ref;
-  document.getElementById('successRef').textContent=ref;
-  if(isAdmin){
-    const panel=document.getElementById('adminPanel');
-    panel.classList.add('show');
-    const safe=naam.replace(/[^a-zA-Z0-9\s]/g,'').replace(/\s+/g,'_');
-    document.getElementById('zipBtnTxt').textContent=T[lang].zipBtnTxt+' – '+safe+'.zip';
-    document.getElementById('adminSpPath').textContent='03 Personeel > 02 Zzp ers > Actief > [nr]. '+naam;
-    document.getElementById('zip_desc').textContent=T[lang].zip_desc;
-    const rows=document.getElementById('adminRows');
-    const info=[['Naam',naam],['E-mail',savedData.email],['KvK/REGON',savedData.kvknummer],['BTW/NIP',savedData.btwnummer],['Referentie',ref],['Taal',lang.toUpperCase()],['Ingediend',savedData.datum+' om '+savedData.tijd],['Documenten',DOCS.filter(d=>uploadedFiles[d]).map(d=>document.getElementById('dn_'+d).textContent).join(', ')]];
-    rows.innerHTML=info.map(([k,v])=>'<div class="admin-row"><span class="admin-key">'+k+'</span><span class="admin-val">'+v+'</span></div>').join('');
-  }
-  setStep('success');
-  document.getElementById('progressBar').style.display='none';
-}
-
-// ── ZIP download ──
-async function downloadZip(){
-  const btn=document.getElementById('btnZip');
-  btn.disabled=true;
-  btn.innerHTML='<div class="spinner" style="width:18px;height:18px;border-width:2px;margin:0;flex-shrink:0;border-top-color:#fff;border-color:rgba(255,255,255,0.3)"></div>&nbsp;Bezig...';
-  try{
-    const naam=savedData.voornaam+' '+savedData.achternaam;
-    const safe=naam.replace(/[^a-zA-Z0-9\s]/g,'').replace(/\s+/g,'_');
-    const zip=new JSZip();
-    const folder=zip.folder('Documenten');
-    for(const d of DOCS){
-      if(uploadedFiles[d]){
-        const ext=uploadedFiles[d].name.split('.').pop();
-        const ab=await uploadedFiles[d].arrayBuffer();
-        folder.file(DOC_FILENAME[d]+'_'+safe+'.'+ext,ab);
-      }
-    }
-    // Excel
-    const wb=XLSX.utils.book_new();
-    const ws1=XLSX.utils.aoa_to_sheet([
-      ['GTO NEDERLAND – MONTEUR REGISTRATIE',''],['',''],
-      ['PERSOONLIJKE GEGEVENS',''],
-      ['Voornaam',savedData.voornaam],['Achternaam',savedData.achternaam],
-      ['E-mailadres',savedData.email],['KvK / REGON',savedData.kvknummer],
-      ['BTW / NIP',savedData.btwnummer],['',''],
-      ['AANMELDING',''],
-      ['Referentienummer',savedData.referentie],
-      ['Formuliertaal',savedData.lang.toUpperCase()],
-      ['Datum ingediend',savedData.datum],['Tijd ingediend',savedData.tijd],['',''],
-      ['SHAREPOINT PAD',''],
-      ['Pad','03 Personeel > 02 Zzp ers > Actief > [nr]. '+naam]
-    ]);
-    ws1['!cols']=[{wch:26},{wch:50}];
-    XLSX.utils.book_append_sheet(wb,ws1,'Gegevens');
-    const ws2=XLSX.utils.aoa_to_sheet([
-      ['Document','Status','Bestandsnaam','Vervaldatum','Documentnummer','Opmerkingen'],
-      ...DOCS.map(d=>[
-        document.getElementById('dn_'+d).textContent,
-        uploadedFiles[d]?'Ontvangen':(DOC_REQUIRED[d]?'ONTBREEKT':'Niet ingediend'),
-        uploadedFiles[d]?uploadedFiles[d].name:'','','',''
-      ])
-    ]);
-    ws2['!cols']=[{wch:26},{wch:16},{wch:38},{wch:18},{wch:20},{wch:24}];
-    XLSX.utils.book_append_sheet(wb,ws2,'Documenten');
-    const ws3=XLSX.utils.aoa_to_sheet([
-      ['IN TE VULLEN DOOR GTO NEDERLAND',''],['',''],
-      ['PERSONEELSNUMMER',''],['Personeelsnummer','← Hier invullen'],['',''],
-      ['KVK UITTREKSEL',''],['KvK vervaldatum',''],['Rechtsvorm',''],['Bedrijfsnaam',''],['',''],
-      ['IDENTITEITSBEWIJS',''],['Documentnummer',''],['Geldig tot',''],['Nationaliteit',''],['',''],
-      ['VCA CERTIFICAAT',''],['VCA geldig tot',''],['VCA niveau',''],['',''],
-      ['VERZEKERINGSPOLIS',''],['Polisnummer',''],['Verzekeraar',''],['Polis geldig tot',''],['',''],
-      ['A1 VERKLARING',''],['A1 geldig tot',''],['Uitgevend land',''],['',''],
-      ['VERWERKING',''],['Verwerkt door',''],['Datum verwerkt',''],['Goedgekeurd',''],['Opmerkingen','']
-    ]);
-    ws3['!cols']=[{wch:26},{wch:40}];
-    XLSX.utils.book_append_sheet(wb,ws3,'In te vullen – GTO');
-    zip.file('Overzicht_'+safe+'.xlsx',XLSX.write(wb,{bookType:'xlsx',type:'array'}));
-    const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download=safe+'_Documenten.zip';
-    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-    btn.disabled=false;btn.style.background='var(--green)';
-    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>&nbsp;ZIP gedownload!';
-  }catch(err){
-    btn.disabled=false;
-    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>&nbsp;Opnieuw proberen';
-    alert('Fout: '+err.message);
+    alert('Fout bij verzenden: '+e.message+'\n\nProbeer opnieuw of neem contact op met GTO Nederland.');
   }
 }
 
-function loadScript(src){
-  return new Promise((res,rej)=>{
-    if(document.querySelector('script[src="'+src+'"]')){res();return;}
-    const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);
-  });
-}
 function setProg(n){
   for(let i=1;i<=3;i++){
     const ps=document.getElementById('ps'+i),dot=document.getElementById('pd'+i);
@@ -883,16 +718,13 @@ function setProg(n){
   }
   for(let i=1;i<=2;i++)document.getElementById('pline'+i).classList.toggle('done',i<n);
 }
-function setStep(n){
-  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
-  document.getElementById(n==='success'?'stepSuccess':'step'+n).classList.add('active');
-}
-function val(id){return document.getElementById(id).value.trim();}
+function setStep(n){document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));document.getElementById(n==='success'?'stepSuccess':'step'+n).classList.add('active');}
+function val(id){const el=document.getElementById(id);return el?el.value.trim():'';}
 function req(id,eid){if(!val(id)){show(eid);mark(id);return false;}hide(eid);unmark(id);return true;}
 function show(id){document.getElementById(id).classList.add('show');}
 function hide(id){document.getElementById(id).classList.remove('show');}
-function mark(id){document.getElementById(id).classList.add('err-input');}
-function unmark(id){document.getElementById(id).classList.remove('err-input');}
+function mark(id){const el=document.getElementById(id);if(el)el.classList.add('err-input');}
+function unmark(id){const el=document.getElementById(id);if(el)el.classList.remove('err-input');}
 </script>
 </body>
 </html>
