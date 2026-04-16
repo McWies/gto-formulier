@@ -311,13 +311,26 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
 
         <!-- Aanvullende documenten -->
         <div style="margin-top:0.75rem;">
-          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.4rem;">Aanvullende documenten <span style="font-size:0.62rem;font-weight:500;color:var(--muted);opacity:0.7;text-transform:none;letter-spacing:0;">(optioneel)</span></div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.65rem;line-height:1.5;">Heeft u nog andere documenten die handig kunnen zijn? Voeg ze hier toe.</div>
-          <div id="extra-docs-list"></div>
-          <button type="button" onclick="addExtraDoc()" style="display:flex;align-items:center;gap:0.4rem;width:100%;padding:0.7rem 0.9rem;background:var(--light);border:1.5px dashed var(--border2);border-radius:10px;font-family:var(--font);font-size:0.8rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-top:0.25rem;" id="btnAddExtra" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Document toevoegen
-          </button>
+          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.3rem;">Aanvullende documenten <span style="font-size:0.62rem;font-weight:500;color:var(--muted);opacity:0.7;text-transform:none;letter-spacing:0;">(optioneel)</span></div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.65rem;line-height:1.5;">Heeft u nog andere documenten? Selecteer ze allemaal tegelijk of sleep ze hierin.</div>
+          <div style="position:relative;border:2px dashed var(--border2);border-radius:11px;background:var(--light);transition:all 0.25s;" id="extra-drop-zone"
+            ondragover="extraDragOver(event)" ondragleave="extraDragLeave()" ondrop="extraDrop(event)">
+            <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+              onchange="handleExtraFiles(event)"
+              style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;">
+            <div style="padding:1.25rem 1rem;text-align:center;" id="extra-drop-inner">
+              <div style="width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 0.5rem;box-shadow:var(--shadow);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <div style="font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:0.1rem;">Sleep bestanden hiernaartoe</div>
+              <div style="font-size:0.68rem;color:var(--muted);"><b style="color:var(--accent);">Klik om te bladeren</b> — meerdere bestanden tegelijk</div>
+            </div>
+            <!-- Geüploade bestanden lijst -->
+            <div id="extra-files-list" style="padding:0 0.75rem 0.75rem;display:none;"></div>
+          </div>
         </div>
 
         <div class="btn-row">
@@ -426,7 +439,8 @@ function setRegType(type){
   uploadedFiles = {};
   polisJaNee = null;
   extraFiles = [];
-  document.getElementById('extra-docs-list').innerHTML = '';
+  renderExtraList();
+  document.getElementById('extra-drop-inner').style.display='block';
 }
 
 function buildDocGrid(){
@@ -732,49 +746,69 @@ function buildSummary(){
 
 let extraFiles = [];
 
-function addExtraDoc(){
-  const idx = extraFiles.length + 1;
-  extraFiles.push(null);
-  const list = document.getElementById('extra-docs-list');
-  const div = document.createElement('div');
-  div.id = 'extra-item-'+idx;
-  div.style.cssText = 'display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;';
-  div.innerHTML = `
-    <div style="position:relative;flex:1;">
-      <div style="background:var(--light);border:1.5px solid var(--border);border-radius:10px;padding:0.65rem 0.9rem;cursor:pointer;position:relative;overflow:hidden;">
-        <input type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="storeExtra(event,${idx})"
-          style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <span id="extra-lbl-${idx}" style="font-size:0.78rem;color:var(--muted);font-weight:500;">Aanvullend document ${idx}</span>
-        </div>
-      </div>
-    </div>
-    <button type="button" onclick="removeExtra(${idx})" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--red-bg);border:1px solid rgba(220,38,38,0.2);border-radius:8px;cursor:pointer;flex-shrink:0;transition:all 0.2s;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>`;
-  list.appendChild(div);
+function handleExtraFiles(e){
+  const newFiles = Array.from(e.target.files);
+  newFiles.forEach(f => extraFiles.push(f));
+  renderExtraList();
+  e.target.value = '';
 }
 
-function storeExtra(e, idx){
-  const file = e.target.files[0];
-  if(!file) return;
-  extraFiles[idx-1] = file;
-  const lbl = document.getElementById('extra-lbl-'+idx);
-  if(lbl){
-    lbl.textContent = file.name.length>32?file.name.substring(0,30)+'...':file.name;
-    lbl.style.color = 'var(--green)';
-    lbl.style.fontWeight = '600';
-    // Add green border to parent
-    lbl.closest('[style*="border"]').style.borderColor = 'var(--green)';
-    lbl.closest('[style*="border"]').style.background = 'var(--green-bg)';
-  }
+function extraDragOver(e){
+  e.preventDefault();
+  const zone = document.getElementById('extra-drop-zone');
+  zone.style.borderColor = 'var(--accent)';
+  zone.style.background = 'var(--accent-light)';
+}
+
+function extraDragLeave(){
+  const zone = document.getElementById('extra-drop-zone');
+  zone.style.borderColor = 'var(--border2)';
+  zone.style.background = 'var(--light)';
+}
+
+function extraDrop(e){
+  e.preventDefault();
+  extraDragLeave();
+  const newFiles = Array.from(e.dataTransfer.files);
+  newFiles.forEach(f => extraFiles.push(f));
+  renderExtraList();
 }
 
 function removeExtra(idx){
-  extraFiles[idx-1] = null;
-  const item = document.getElementById('extra-item-'+idx);
-  if(item) item.remove();
+  extraFiles.splice(idx, 1);
+  renderExtraList();
+}
+
+function renderExtraList(){
+  const listEl = document.getElementById('extra-files-list');
+  const inner = document.getElementById('extra-drop-inner');
+  if(extraFiles.length === 0){
+    listEl.style.display = 'none';
+    listEl.innerHTML = '';
+    inner.style.display = 'block';
+    const zone = document.getElementById('extra-drop-zone');
+    zone.style.borderColor = 'var(--border2)';
+    return;
+  }
+  inner.style.display = extraFiles.length === 0 ? 'block' : 'none';
+  listEl.style.display = 'block';
+  const zone = document.getElementById('extra-drop-zone');
+  zone.style.borderColor = 'var(--green)';
+  zone.style.background = 'var(--green-bg)';
+  listEl.innerHTML = extraFiles.map((f,i) => `
+    <div style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.5rem;background:#fff;border-radius:8px;margin-bottom:0.35rem;border:1px solid var(--green-border);">
+      <div style="width:22px;height:22px;background:rgba(22,163,74,0.12);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <span style="font-size:0.72rem;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i+1}. ${f.name}</span>
+      <button type="button" onclick="removeExtra(${i})" style="background:none;border:none;cursor:pointer;color:var(--muted);display:flex;padding:2px;border-radius:4px;flex-shrink:0;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('') + `
+    <div style="padding:0.5rem 0.25rem 0.25rem;cursor:pointer;position:relative;display:inline-block;">
+      <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleExtraFiles(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+      <span style="font-size:0.72rem;color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px;">+ Meer toevoegen</span>
+    </div>`;
 }
 
 async function submitForm(){
