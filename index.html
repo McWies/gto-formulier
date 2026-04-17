@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>GTO Nederland – Monteur Registratie</title>
+<meta id="meta-og-title" property="og:title" content="GTO Nederland – Monteur Registratie">
+<meta id="meta-og-desc" property="og:description" content="Registreer uw documenten bij GTO Nederland">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -184,7 +186,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
         </svg>
       </div>
       <div>
-        <div class="logo-text">GTO Nederland</div>
+        <div class="logo-text" id="logo-bedrijf-naam">GTO Nederland</div>
         <div class="logo-sub" id="logoSub">Monteur Registratie</div>
       </div>
     </div>
@@ -395,13 +397,13 @@ let polisJaNee = null;
 const DOC_CONFIG = {
   kvk: [
     {key:'kvkdoc', icon:'&#127970;', nameKey:'KvK Uittreksel', subKey:'Uittreksel', datumKey:'kvkdoc_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
-    {key:'vca',    icon:'&#9989;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'vca',    icon:'&#9935;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
     {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
     {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
   ],
   regon: [
     {key:'ceidg',  icon:'&#127477;&#127473;', nameKey:'Ceidg document', subKey:'Ceidg', datumKey:'ceidg_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
-    {key:'vca',    icon:'&#9989;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'vca',    icon:'&#9935;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
     {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
     {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
     {key:'a1',     icon:'&#128196;', nameKey:'A1 Verklaring',   subKey:'A1', datumKey:'a1_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
@@ -414,12 +416,27 @@ const DOC_CONFIG = {
   if(l && T[l]) setLang(l, true);
   // Bedrijf uit URL
   const b = p.get('bedrijf');
-  if(b === 'west'){
-    document.getElementById('logoSub').textContent = 'GTO West – Registratie';
-    document.title = 'GTO West – Monteur Registratie';
-  } else {
-    document.getElementById('logoSub').textContent = 'GTO Nederland – Registratie';
-  }
+  const isWest = b === 'west';
+  const bedrijfNaam = isWest ? 'GTO West' : 'GTO Nederland';
+  window.BEDRIJF_NAAM = bedrijfNaam;
+
+  // Logo
+  document.getElementById('logoSub').textContent = 'Monteur Registratie';
+  document.getElementById('logo-bedrijf-naam').textContent = bedrijfNaam;
+
+  // Paginatitel (ook WhatsApp preview)
+  document.title = bedrijfNaam + ' – Monteur Registratie';
+
+  // Meta tags voor WhatsApp
+  const metaTitle = document.getElementById('meta-og-title');
+  const metaDesc = document.getElementById('meta-og-desc');
+  if(metaTitle) metaTitle.setAttribute('content', bedrijfNaam + ' – Monteur Registratie');
+  if(metaDesc) metaDesc.setAttribute('content', 'Registreer uw documenten bij ' + bedrijfNaam);
+
+  // Alle teksten in het formulier die GTO Nederland bevatten
+  document.querySelectorAll('[data-bedrijf]').forEach(el => {
+    el.textContent = el.getAttribute('data-bedrijf').replace('GTO Nederland', bedrijfNaam);
+  });
 })();
 
 function setLang(l, silent){
@@ -951,7 +968,7 @@ async function submitForm(){
     if(!result.ok) throw new Error(result.error||'Onbekende fout');
     document.getElementById('sendingWrap').classList.remove('show');
     document.getElementById('lbl_success_title').textContent=T[lang].lbl_success_title;
-    document.getElementById('successDesc').textContent=T[lang].successDesc_tpl.replace('{naam}',val('voornaam'));
+    document.getElementById('successDesc').textContent=T[lang].successDesc_tpl.replace('{naam}',val('voornaam')).replace('GTO Nederland', window.BEDRIJF_NAAM||'GTO Nederland');
     document.getElementById('lbl_ref').textContent=T[lang].lbl_ref;
     document.getElementById('successRef').textContent=ref;
     setStep('success');
