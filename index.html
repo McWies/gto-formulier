@@ -293,7 +293,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
         </div>
 
         <div class="btn-row">
-          <button class="btn btn-next" onclick="toStep2()" id="btnNext1">Volgende &#8594;</button>
+          <button class="btn btn-next" onclick="toStep2()" id="btnNext1"><span id="lbl_btnNext1">Volgende</span> &#8594;</button>
         </div>
       </div>
 
@@ -317,7 +317,8 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
             ondragover="extraDragOver(event)" ondragleave="extraDragLeave()" ondrop="extraDrop(event)">
             <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
               onchange="handleExtraFiles(event)"
-              style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;">
+              id="extra-main-input"
+              style="position:absolute;top:0;left:0;right:0;height:110px;opacity:0;cursor:pointer;width:100%;z-index:2;">
             <div style="padding:1.25rem 1rem;text-align:center;" id="extra-drop-inner">
               <div style="width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;margin:0 auto 0.5rem;box-shadow:var(--shadow);">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round">
@@ -335,7 +336,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
 
         <div class="btn-row">
           <button class="btn btn-back" onclick="toStep1()">&#8592;</button>
-          <button class="btn btn-next" onclick="toStep3()" id="btnNext2">Controleren &#8594;</button>
+          <button class="btn btn-next" onclick="toStep3()" id="btnNext2"><span id="lbl_btnNext2">Controleren</span> &#8594;</button>
         </div>
       </div>
 
@@ -380,9 +381,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
 const BACKEND_URL = 'https://gto-registratie.onrender.com';
 
 const T = {
-  nl:{logoSub:'Monteur Registratie',plbl1:'Gegevens',plbl2:'Documenten',plbl3:'Versturen',lbl_s1:'Stap 1 van 3',lbl_s2:'Stap 2 van 3',lbl_s3:'Stap 3 van 3',lbl_t1:'Uw gegevens',lbl_t2:'Documenten uploaden',lbl_t3:'Controleer & Verstuur',lbl_d1:'Vul uw persoonlijke en bedrijfsgegevens in.',lbl_d2:'Upload alle verplichte documenten en vul de geldigheidsdatums in.',lbl_d3:'Controleer uw gegevens voordat u verstuurt.',lbl_voornaam:'Voornaam',lbl_achternaam:'Achternaam',lbl_geboortedatum:'Geboortedatum',lbl_geboorteplaats:'Geboorteplaats',lbl_email:'E-mailadres',lbl_regtype:'Registratietype',lbl_kvk:'KvK-nummer',lbl_btw:'BTW-nummer',lbl_regon:'REGON-nummer',lbl_nip:'NIP-nummer',lbl_opt1:'(optioneel)',lbl_opt2:'(optioneel)',lbl_send:'Versturen naar GTO',sendingTxt:'Verzenden naar GTO Nederland...',lbl_success_title:'Aanmelding ontvangen!',lbl_ref:'Referentie:',err_req:'Verplicht',err_email:'Ongeldig e-mailadres',err_kvk:'Verplicht (8 cijfers)',err_regon:'Verplicht (9 of 14 cijfers)',drag:'Sleep bestand hiernaartoe',browse:'Tik om te bladeren',uploaded_lbl:'Geüpload:',of_lbl:'van',id_lbl:'Identiteitsbewijs',id_nr:'Documentnummer',id_geldig:'Geldig tot',id_id:'ID kaart',id_passport:'Paspoort',geldig_tot:'Geldig tot',aangeschaft:'Aangeschaft op',alert_missing:'Upload eerst alle verplichte documenten:\n',successDesc_tpl:'Bedankt, {naam}. GTO Nederland heeft uw aanmelding ontvangen en neemt contact met u op.'},
-  en:{logoSub:'Contractor Registration',plbl1:'Details',plbl2:'Documents',plbl3:'Submit',lbl_s1:'Step 1 of 3',lbl_s2:'Step 2 of 3',lbl_s3:'Step 3 of 3',lbl_t1:'Your details',lbl_t2:'Upload documents',lbl_t3:'Review & Submit',lbl_d1:'Please fill in your personal and company details.',lbl_d2:'Upload all required documents and fill in validity dates.',lbl_d3:'Review your details before submitting.',lbl_voornaam:'First name',lbl_achternaam:'Last name',lbl_geboortedatum:'Date of birth',lbl_geboorteplaats:'Place of birth',lbl_email:'Email address',lbl_regtype:'Registration type',lbl_kvk:'KvK number',lbl_btw:'VAT number',lbl_regon:'REGON number',lbl_nip:'NIP number',lbl_opt1:'(optional)',lbl_opt2:'(optional)',lbl_send:'Submit to GTO',sendingTxt:'Sending to GTO Nederland...',lbl_success_title:'Registration received!',lbl_ref:'Reference:',err_req:'Required',err_email:'Invalid email address',err_kvk:'Required (8 digits)',err_regon:'Required (9 or 14 digits)',drag:'Drop file here',browse:'Tap to browse',uploaded_lbl:'Uploaded:',of_lbl:'of',id_lbl:'Identity document',id_nr:'Document number',id_geldig:'Valid until',id_id:'ID card',id_passport:'Passport',geldig_tot:'Valid until',aangeschaft:'Purchased on',alert_missing:'Please upload all required documents first:\n',successDesc_tpl:'Thank you, {naam}. GTO Nederland has received your registration.'},
-  pl:{logoSub:'Rejestracja Montera',plbl1:'Dane',plbl2:'Dokumenty',plbl3:'Wyślij',lbl_s1:'Krok 1 z 3',lbl_s2:'Krok 2 z 3',lbl_s3:'Krok 3 z 3',lbl_t1:'Twoje dane',lbl_t2:'Prześlij dokumenty',lbl_t3:'Sprawdź i wyślij',lbl_d1:'Wypełnij swoje dane osobowe i firmowe.',lbl_d2:'Prześlij wszystkie wymagane dokumenty i podaj daty ważności.',lbl_d3:'Sprawdź swoje dane przed wysłaniem.',lbl_voornaam:'Imię',lbl_achternaam:'Nazwisko',lbl_geboortedatum:'Data urodzenia',lbl_geboorteplaats:'Miejsce urodzenia',lbl_email:'Adres e-mail',lbl_regtype:'Typ rejestracji',lbl_kvk:'Numer KvK',lbl_btw:'Numer VAT',lbl_regon:'Numer REGON',lbl_nip:'Numer NIP',lbl_opt1:'(opcjonalne)',lbl_opt2:'(opcjonalne)',lbl_send:'Wyślij do GTO',sendingTxt:'Wysyłanie do GTO Nederland...',lbl_success_title:'Rejestracja otrzymana!',lbl_ref:'Numer ref.:',err_req:'Wymagane',err_email:'Nieprawidłowy adres e-mail',err_kvk:'Wymagane (8 cyfr)',err_regon:'Wymagane (9 lub 14 cyfr)',drag:'Upuść plik tutaj',browse:'Dotknij, aby przeglądać',uploaded_lbl:'Przesłano:',of_lbl:'z',id_lbl:'Dokument tożsamości',id_nr:'Numer dokumentu',id_geldig:'Ważny do',id_id:'Dowód osobisty',id_passport:'Paszport',geldig_tot:'Ważny do',aangeschaft:'Zakupiono dnia',alert_missing:'Najpierw prześlij wszystkie wymagane dokumenty:\n',successDesc_tpl:'Dziękujemy, {naam}. GTO Nederland otrzymało Twoją rejestrację.'}
+  nl:{logoSub:'Monteur Registratie',plbl1:'Gegevens',plbl2:'Documenten',plbl3:'Versturen',lbl_s1:'Stap 1 van 3',lbl_s2:'Stap 2 van 3',lbl_s3:'Stap 3 van 3',lbl_t1:'Uw gegevens',lbl_t2:'Documenten uploaden',lbl_t3:'Controleer & Verstuur',lbl_d1:'Vul uw persoonlijke en bedrijfsgegevens in.',lbl_d2:'Upload alle verplichte documenten en vul de geldigheidsdatums in.',lbl_d3:'Controleer uw gegevens voordat u verstuurt.',lbl_voornaam:'Voornaam',lbl_achternaam:'Achternaam',lbl_geboortedatum:'Geboortedatum',lbl_geboorteplaats:'Geboorteplaats',lbl_email:'E-mailadres',lbl_regtype:'Registratietype',lbl_kvk:'KvK-nummer',lbl_btw:'BTW-nummer',lbl_regon:'REGON-nummer',lbl_nip:'NIP-nummer',lbl_opt1:'(optioneel)',lbl_opt2:'(optioneel)',lbl_send:'Versturen naar GTO',sendingTxt:'Verzenden naar GTO Nederland...',lbl_success_title:'Aanmelding ontvangen!',lbl_btnNext1:'Volgende',lbl_btnNext2:'Controleren',lbl_ref:'Referentie:',err_req:'Verplicht',err_email:'Ongeldig e-mailadres',err_kvk:'Verplicht (8 cijfers)',err_regon:'Verplicht (9 of 14 cijfers)',drag:'Sleep bestand hiernaartoe',browse:'Tik om te bladeren',uploaded_lbl:'Geüpload:',of_lbl:'van',id_lbl:'Identiteitsbewijs',id_nr:'Documentnummer',id_geldig:'Geldig tot',id_id:'ID kaart',id_passport:'Paspoort',geldig_tot:'Geldig tot',aangeschaft:'Aangeschaft op',alert_missing:'Upload eerst alle verplichte documenten:\n',successDesc_tpl:'Bedankt, {naam}. GTO Nederland heeft uw aanmelding ontvangen en neemt contact met u op.'},
+  en:{logoSub:'Contractor Registration',plbl1:'Details',plbl2:'Documents',plbl3:'Submit',lbl_s1:'Step 1 of 3',lbl_s2:'Step 2 of 3',lbl_s3:'Step 3 of 3',lbl_t1:'Your details',lbl_t2:'Upload documents',lbl_t3:'Review & Submit',lbl_d1:'Please fill in your personal and company details.',lbl_d2:'Upload all required documents and fill in validity dates.',lbl_d3:'Review your details before submitting.',lbl_voornaam:'First name',lbl_achternaam:'Last name',lbl_geboortedatum:'Date of birth',lbl_geboorteplaats:'Place of birth',lbl_email:'Email address',lbl_regtype:'Registration type',lbl_kvk:'KvK number',lbl_btw:'VAT number',lbl_regon:'REGON number',lbl_nip:'NIP number',lbl_opt1:'(optional)',lbl_opt2:'(optional)',lbl_send:'Submit to GTO',sendingTxt:'Sending to GTO Nederland...',lbl_success_title:'Registration received!',lbl_btnNext1:'Next',lbl_btnNext2:'Review',lbl_ref:'Reference:',err_req:'Required',err_email:'Invalid email address',err_kvk:'Required (8 digits)',err_regon:'Required (9 or 14 digits)',drag:'Drop file here',browse:'Tap to browse',uploaded_lbl:'Uploaded:',of_lbl:'of',id_lbl:'Identity document',id_nr:'Document number',id_geldig:'Valid until',id_id:'ID card',id_passport:'Passport',geldig_tot:'Valid until',aangeschaft:'Purchased on',alert_missing:'Please upload all required documents first:\n',successDesc_tpl:'Thank you, {naam}. GTO Nederland has received your registration.'},
+  pl:{logoSub:'Rejestracja Montera',plbl1:'Dane',plbl2:'Dokumenty',plbl3:'Wyślij',lbl_s1:'Krok 1 z 3',lbl_s2:'Krok 2 z 3',lbl_s3:'Krok 3 z 3',lbl_t1:'Twoje dane',lbl_t2:'Prześlij dokumenty',lbl_t3:'Sprawdź i wyślij',lbl_d1:'Wypełnij swoje dane osobowe i firmowe.',lbl_d2:'Prześlij wszystkie wymagane dokumenty i podaj daty ważności.',lbl_d3:'Sprawdź swoje dane przed wysłaniem.',lbl_voornaam:'Imię',lbl_achternaam:'Nazwisko',lbl_geboortedatum:'Data urodzenia',lbl_geboorteplaats:'Miejsce urodzenia',lbl_email:'Adres e-mail',lbl_regtype:'Typ rejestracji',lbl_kvk:'Numer KvK',lbl_btw:'Numer VAT',lbl_regon:'Numer REGON',lbl_nip:'Numer NIP',lbl_opt1:'(opcjonalne)',lbl_opt2:'(opcjonalne)',lbl_send:'Wyślij do GTO',sendingTxt:'Wysyłanie do GTO Nederland...',lbl_success_title:'Rejestracja otrzymana!',lbl_btnNext1:'Dalej',lbl_btnNext2:'Sprawdź',lbl_ref:'Numer ref.:',err_req:'Wymagane',err_email:'Nieprawidłowy adres e-mail',err_kvk:'Wymagane (8 cyfr)',err_regon:'Wymagane (9 lub 14 cyfr)',drag:'Upuść plik tutaj',browse:'Dotknij, aby przeglądać',uploaded_lbl:'Przesłano:',of_lbl:'z',id_lbl:'Dokument tożsamości',id_nr:'Numer dokumentu',id_geldig:'Ważny do',id_id:'Dowód osobisty',id_passport:'Paszport',geldig_tot:'Ważny do',aangeschaft:'Zakupiono dnia',alert_missing:'Najpierw prześlij wszystkie wymagane dokumenty:\n',successDesc_tpl:'Dziękujemy, {naam}. GTO Nederland otrzymało Twoją rejestrację.'}
 };
 
 let lang = 'nl';
@@ -417,7 +418,7 @@ function setLang(l, silent){
   lang = l;
   ['nl','en','pl'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===l));
   const t = T[l];
-  const ids = ['logoSub','plbl1','plbl2','plbl3','lbl_s1','lbl_s2','lbl_s3','lbl_t1','lbl_t2','lbl_t3','lbl_d1','lbl_d2','lbl_d3','lbl_voornaam','lbl_achternaam','lbl_geboortedatum','lbl_geboorteplaats','lbl_email','lbl_regtype','lbl_kvk','lbl_btw','lbl_regon','lbl_nip','lbl_opt1','lbl_opt2','lbl_send','sendingTxt','lbl_success_title','lbl_ref'];
+  const ids = ['logoSub','plbl1','plbl2','plbl3','lbl_s1','lbl_s2','lbl_s3','lbl_t1','lbl_t2','lbl_t3','lbl_d1','lbl_d2','lbl_d3','lbl_voornaam','lbl_achternaam','lbl_geboortedatum','lbl_geboorteplaats','lbl_email','lbl_regtype','lbl_kvk','lbl_btw','lbl_regon','lbl_nip','lbl_opt1','lbl_opt2','lbl_send','sendingTxt','lbl_success_title','lbl_ref','lbl_btnNext1','lbl_btnNext2'];
   ids.forEach(id=>{const el=document.getElementById(id);if(el&&t[id]!==undefined)el.textContent=t[id];});
   document.getElementById('e_vnaam').textContent=t.err_req;
   document.getElementById('e_anaam').textContent=t.err_req;
@@ -428,6 +429,32 @@ function setLang(l, silent){
   document.getElementById('e_regon').textContent=t.err_regon;
   document.documentElement.lang=l;
   if(!silent) buildDocGrid();
+}
+
+function retranslateDocs(){
+  const t = T[lang];
+  const docs = DOC_CONFIG[regType];
+  docs.forEach(d => {
+    const nameEl = document.querySelector('#card-'+d.key+' .doc-name');
+    if(nameEl) nameEl.textContent = d.nameKey;
+    // Update upload zone hints
+    const ztitle = document.getElementById('ztitle-'+d.key);
+    if(ztitle && !uploadedFiles[d.key]) ztitle.textContent = t.drag;
+    const datumEl = document.getElementById('datum-'+d.key);
+    if(datumEl){
+      const lbl = datumEl.previousElementSibling;
+      if(lbl) lbl.textContent = d.datumLabel==='aangeschaft' ? t.aangeschaft : t.geldig_tot;
+    }
+  });
+  // Translate polis question
+  const polisVraag = document.getElementById('polis-vraag-lbl');
+  if(polisVraag){
+    const vraagMap = {nl:'Beschikt u over een bedrijfsaansprakelijkheidsverzekering?', en:'Do you have business liability insurance?', pl:'Czy posiadasz ubezpieczenie odpowiedzialności cywilnej?'};
+    polisVraag.textContent = vraagMap[lang] || vraagMap.nl;
+  }
+  // Extra docs hint
+  const extraHint = document.querySelector('#extra-drop-zone .upload-hint b');
+  if(extraHint) extraHint.parentElement.innerHTML = '<b style="color:var(--accent);">'+t.browse+'</b> — max 10 '+{nl:'bestanden',en:'files',pl:'plików'}[lang]+' &middot; max 5MB per bestand';
 }
 
 function setRegType(type){
@@ -832,7 +859,7 @@ function renderExtraList(){
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <span style="font-size:0.72rem;font-weight:600;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${i+1}. ${f.name}</span>
-      <button type="button" onclick="removeExtra(${i})" style="background:none;border:none;cursor:pointer;color:var(--muted);display:flex;padding:2px;border-radius:4px;flex-shrink:0;">
+      <button type="button" onclick="removeExtra(${i})" style="background:none;border:none;cursor:pointer;color:var(--muted);display:flex;padding:4px;border-radius:4px;flex-shrink:0;position:relative;z-index:10;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>`).join('') + `
