@@ -326,7 +326,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
                 </svg>
               </div>
               <div style="font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:0.1rem;">Sleep bestanden hiernaartoe</div>
-              <div style="font-size:0.68rem;color:var(--muted);"><b style="color:var(--accent);">Klik om te bladeren</b> — meerdere bestanden tegelijk</div>
+              <div style="font-size:0.68rem;color:var(--muted);"><b style="color:var(--accent);">Klik om te bladeren</b> — max 10 bestanden &middot; max 5MB per bestand</div>
             </div>
             <!-- Geüploade bestanden lijst -->
             <div id="extra-files-list" style="padding:0 0.75rem 0.75rem;display:none;"></div>
@@ -619,6 +619,10 @@ function onDragLeave(key){document.getElementById('zone-'+key).classList.remove(
 function onDrop(e,key){e.preventDefault();document.getElementById('zone-'+key).classList.remove('drag');if(e.dataTransfer.files[0])storeFile(e.dataTransfer.files[0],key);}
 
 function storeFile(file, key){
+  if(file.size > 8 * 1024 * 1024){
+    alert('Dit bestand is te groot (' + (file.size/1024/1024).toFixed(1) + 'MB). Maximum is 8MB per document.\nVerminder de bestandsgrootte en probeer opnieuw.');
+    return;
+  }
   uploadedFiles[key] = file;
   const zone = document.getElementById('zone-'+key);
   const pill = document.getElementById('pill-'+key);
@@ -746,9 +750,24 @@ function buildSummary(){
 
 let extraFiles = [];
 
+const MAX_EXTRA_FILES = 10;
+const MAX_EXTRA_SIZE_MB = 5;
+
 function handleExtraFiles(e){
   const newFiles = Array.from(e.target.files);
-  newFiles.forEach(f => extraFiles.push(f));
+  let rejected = [];
+  newFiles.forEach(f => {
+    if(extraFiles.length >= MAX_EXTRA_FILES){
+      rejected.push(f.name + ' (max ' + MAX_EXTRA_FILES + ' bestanden bereikt)');
+    } else if(f.size > MAX_EXTRA_SIZE_MB * 1024 * 1024){
+      rejected.push(f.name + ' (' + (f.size/1024/1024).toFixed(1) + 'MB, max ' + MAX_EXTRA_SIZE_MB + 'MB)');
+    } else {
+      extraFiles.push(f);
+    }
+  });
+  if(rejected.length > 0){
+    alert('De volgende bestanden zijn niet toegevoegd:\n\n' + rejected.join('\n') + '\n\nMaximum: ' + MAX_EXTRA_FILES + ' bestanden van elk max ' + MAX_EXTRA_SIZE_MB + 'MB.');
+  }
   renderExtraList();
   e.target.value = '';
 }
@@ -770,7 +789,19 @@ function extraDrop(e){
   e.preventDefault();
   extraDragLeave();
   const newFiles = Array.from(e.dataTransfer.files);
-  newFiles.forEach(f => extraFiles.push(f));
+  let rejected = [];
+  newFiles.forEach(f => {
+    if(extraFiles.length >= MAX_EXTRA_FILES){
+      rejected.push(f.name + ' (max ' + MAX_EXTRA_FILES + ' bestanden bereikt)');
+    } else if(f.size > MAX_EXTRA_SIZE_MB * 1024 * 1024){
+      rejected.push(f.name + ' (' + (f.size/1024/1024).toFixed(1) + 'MB, max ' + MAX_EXTRA_SIZE_MB + 'MB)');
+    } else {
+      extraFiles.push(f);
+    }
+  });
+  if(rejected.length > 0){
+    alert('De volgende bestanden zijn niet toegevoegd:\n\n' + rejected.join('\n'));
+  }
   renderExtraList();
 }
 
@@ -817,6 +848,19 @@ async function submitForm(){
   document.getElementById('sendingTxt').textContent=T[lang].sendingTxt;
   const now=new Date();
   const ref='GTO-'+now.getFullYear()+('0'+(now.getMonth()+1)).slice(-2)+('0'+now.getDate()).slice(-2)+'-'+Math.floor(1000+Math.random()*9000);
+  // Check totale bestandsgrootte
+  let totalSize = 0;
+  ['kvkdoc','ceidg','vca','polis','a1'].forEach(k=>{
+    if(uploadedFiles[k]&&uploadedFiles[k].size) totalSize += uploadedFiles[k].size;
+  });
+  extraFiles.forEach(f=>{ if(f) totalSize += f.size; });
+  if(totalSize > 40 * 1024 * 1024){
+    document.getElementById('sendingWrap').classList.remove('show');
+    document.getElementById('step3Btns').style.display='flex';
+    alert('De totale bestandsgrootte is te groot (' + (totalSize/1024/1024).toFixed(1) + 'MB). Maximum is 40MB in totaal.\nVerklein een of meerdere bestanden en probeer opnieuw.');
+    return;
+  }
+
   try{
     const fd=new FormData();
     fd.append('voornaam',val('voornaam'));
