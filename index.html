@@ -412,6 +412,14 @@ const DOC_CONFIG = {
   const p = new URLSearchParams(window.location.search);
   const l = p.get('lang');
   if(l && T[l]) setLang(l, true);
+  // Bedrijf uit URL
+  const b = p.get('bedrijf');
+  if(b === 'west'){
+    document.getElementById('logoSub').textContent = 'GTO West – Registratie';
+    document.title = 'GTO West – Monteur Registratie';
+  } else {
+    document.getElementById('logoSub').textContent = 'GTO Nederland – Registratie';
+  }
 })();
 
 function setLang(l, silent){
@@ -906,6 +914,8 @@ async function submitForm(){
     fd.append('id_geldig',document.getElementById('id_geldig')?document.getElementById('id_geldig').value:'');
     fd.append('referentie',ref);
     fd.append('lang',lang);
+    const bedrijfParam = new URLSearchParams(window.location.search).get('bedrijf');
+    fd.append('bedrijf', bedrijfParam === 'west' ? 'GTO West' : 'GTO Nederland');
     // Datums
     const datumFields=['kvkdoc_datum','ceidg_datum','vca_geldig','polis_geldig','a1_geldig'];
     const datumDocKeys=['kvkdoc','ceidg','vca','polis','a1'];
