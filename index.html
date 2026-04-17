@@ -396,17 +396,17 @@ let polisJaNee = null;
 
 const DOC_CONFIG = {
   kvk: [
-    {key:'kvkdoc', icon:'&#127970;', nameKey:'KvK Uittreksel', subKey:'Uittreksel', datumKey:'kvkdoc_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
-    {key:'vca',    icon:'&#9935;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
-    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
-    {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
+    {key:'kvkdoc', icon:'', nameKey:'KvK Uittreksel', subKey:'Uittreksel', datumKey:'kvkdoc_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
+    {key:'vca',    icon:'',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'polis',  icon:'', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
+    {key:'id',     icon:'', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
   ],
   regon: [
-    {key:'ceidg',  icon:'&#127477;&#127473;', nameKey:'Ceidg document', subKey:'Ceidg', datumKey:'ceidg_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
-    {key:'vca',    icon:'&#9935;',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
-    {key:'polis',  icon:'&#128203;', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
-    {key:'id',     icon:'&#129538;', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
-    {key:'a1',     icon:'&#128196;', nameKey:'A1 Verklaring',   subKey:'A1', datumKey:'a1_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'ceidg',  icon:'', nameKey:'Ceidg document', subKey:'Ceidg', datumKey:'ceidg_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
+    {key:'vca',    icon:'',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'polis',  icon:'', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
+    {key:'id',     icon:'', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
+    {key:'a1',     icon:'', nameKey:'A1 Verklaring',   subKey:'A1', datumKey:'a1_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
   ]
 };
 
@@ -589,7 +589,6 @@ function buildDocGrid(){
     card.innerHTML = `
       <div class="doc-card-header" onclick="toggleDoc('${doc.key}')">
         <div class="doc-card-left">
-          <span class="doc-emoji">${doc.icon}</span>
           <div class="doc-info">
             <span class="doc-name">${doc.nameKey}</span>
             <span class="doc-sub">${doc.subKey}</span>
