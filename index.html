@@ -225,12 +225,12 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
 
         <div class="field-row">
           <div class="field">
-            <label id="lbl_voornaam">Voornaam</label>
+            <label id="lbl_voornaam">Voornaam <span style="color:var(--accent);">*</span></label>
             <input type="text" id="voornaam" placeholder="Jan" autocomplete="given-name">
             <div class="err-msg" id="e_vnaam">Verplicht</div>
           </div>
           <div class="field">
-            <label id="lbl_achternaam">Achternaam</label>
+            <label id="lbl_achternaam">Achternaam <span style="color:var(--accent);">*</span></label>
             <input type="text" id="achternaam" placeholder="de Vries" autocomplete="family-name">
             <div class="err-msg" id="e_anaam">Verplicht</div>
           </div>
@@ -238,19 +238,19 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
 
         <div class="field-row">
           <div class="field">
-            <label id="lbl_geboortedatum">Geboortedatum</label>
+            <label id="lbl_geboortedatum">Geboortedatum <span style="color:var(--accent);">*</span></label>
             <input type="date" id="geboortedatum">
             <div class="err-msg" id="e_gbd">Verplicht</div>
           </div>
           <div class="field">
-            <label id="lbl_geboorteplaats">Geboorteplaats</label>
+            <label id="lbl_geboorteplaats">Geboorteplaats <span style="color:var(--accent);">*</span></label>
             <input type="text" id="geboorteplaats" placeholder="Amsterdam">
             <div class="err-msg" id="e_gbp">Verplicht</div>
           </div>
         </div>
 
         <div class="field">
-          <label id="lbl_adres">Adres</label>
+          <label id="lbl_adres">Adres <span style="color:var(--accent);">*</span></label>
           <div style="position:relative;">
             <input type="text" id="adres" placeholder="Straatnaam, huisnummer, stad..."
               autocomplete="off"
@@ -266,36 +266,39 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
         </div>
 
         <div class="field">
-          <label id="lbl_email">E-mailadres</label>
+          <label id="lbl_email">E-mailadres <span style="color:var(--accent);">*</span></label>
           <input type="email" id="email" placeholder="jan@email.com" autocomplete="email" inputmode="email">
           <div class="err-msg" id="e_email">Ongeldig e-mailadres</div>
         </div>
 
         <div class="field">
-          <label id="lbl_telefoon">Telefoonnummer</label>
+          <label id="lbl_telefoon">Telefoonnummer <span style="color:var(--accent);">*</span></label>
           <div style="position:relative;">
             <input type="tel" id="telefoon" placeholder="+31 6 12345678" autocomplete="tel" inputmode="tel"
               style="width:100%;padding:0.8rem 0.9rem 0.8rem 2.5rem;background:var(--light);border:1.5px solid var(--border);border-radius:10px;font-family:var(--font);font-size:0.9rem;color:var(--text);outline:none;-webkit-appearance:none;transition:border-color 0.2s,box-shadow 0.2s;"
               onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(232,64,28,0.1)';this.style.background='#fff'"
               onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'">
             <svg style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 .93h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            <div class="err-msg" id="e_tel">Verplicht veld</div>
           </div>
         </div>
 
         <div class="divider"></div>
 
         <div class="field">
-          <label id="lbl_regtype">Registratietype</label>
-          <div class="reg-tabs">
+          <label id="lbl_regtype">Registratietype <span style="color:var(--accent);">*</span></label>
+          <div class="reg-tabs" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="reg-tab active" id="tab-kvk" onclick="setRegType('kvk')">
-              
               <span class="reg-tab-name">KvK</span>
               <span class="reg-tab-sub">Nederland</span>
             </div>
             <div class="reg-tab" id="tab-regon" onclick="setRegType('regon')">
-              
               <span class="reg-tab-name">CEiDG</span>
               <span class="reg-tab-sub">Polen</span>
+            </div>
+            <div class="reg-tab" id="tab-anders" onclick="setRegType('anders')">
+              <span class="reg-tab-name" id="lbl_anders_tab">Anders</span>
+              <span class="reg-tab-sub" id="lbl_anders_sub">Internationaal</span>
             </div>
           </div>
         </div>
@@ -303,13 +306,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
         <!-- KvK velden -->
         <div id="kvk-fields">
           <div class="field">
-            <label id="lbl_kvk">KvK-nummer</label>
+            <label id="lbl_kvk">KvK-nummer <span style="color:var(--accent);">*</span></label>
             <input type="text" id="kvknummer" placeholder="12345678" maxlength="8" inputmode="numeric">
             <div class="err-msg" id="e_kvk">Verplicht (8 cijfers)</div>
           </div>
           <div class="field">
-            <label id="lbl_btw">BTW-nummer</label>
+            <label id="lbl_btw">BTW-nummer <span style="color:var(--accent);">*</span></label>
             <input type="text" id="btwnummer" placeholder="NL123456789B01">
+            <div class="err-msg" id="e_btw">Verplicht veld</div>
             <div class="err-msg" id="e_btw">Verplicht</div>
           </div>
         </div>
@@ -317,14 +321,28 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
         <!-- REGON velden -->
         <div id="regon-fields" style="display:none;">
           <div class="field">
-            <label id="lbl_regon">REGON-nummer</label>
+            <label id="lbl_regon">REGON-nummer <span style="color:var(--accent);">*</span></label>
             <input type="text" id="regonnummer" placeholder="123456789" maxlength="14" inputmode="numeric">
             <div class="err-msg" id="e_regon">Verplicht (9 of 14 cijfers)</div>
           </div>
           <div class="field">
-            <label id="lbl_nip">NIP-nummer</label>
+            <label id="lbl_nip">NIP-nummer <span style="color:var(--accent);">*</span></label>
             <input type="text" id="nipnummer" placeholder="PL1234567890">
             <div class="err-msg" id="e_nip">Verplicht</div>
+          </div>
+        </div>
+
+        <!-- Anders velden -->
+        <div id="anders-fields" style="display:none;">
+          <div class="field">
+            <label id="lbl_handelsreg">Handelsregister Nummer <span style="color:var(--accent);">*</span></label>
+            <input type="text" id="handelsregnummer" placeholder="Voer uw handelregisternummer in">
+            <div class="err-msg" id="e_handelsreg">Verplicht veld</div>
+          </div>
+          <div class="field">
+            <label id="lbl_belasting">Belasting Nummer <span style="color:var(--accent);">*</span></label>
+            <input type="text" id="belastingnummer" placeholder="Voer uw belastingnummer in">
+            <div class="err-msg" id="e_belasting">Verplicht veld</div>
           </div>
         </div>
 
@@ -417,9 +435,9 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:280px;backgro
 const BACKEND_URL = 'https://gto-registratie.onrender.com';
 
 const T = {
-  nl:{logoSub:'Monteur Registratie',plbl1:'Gegevens',plbl2:'Documenten',plbl3:'Versturen',lbl_s1:'Stap 1 van 3',lbl_s2:'Stap 2 van 3',lbl_s3:'Stap 3 van 3',lbl_t1:'Uw gegevens',lbl_t2:'Documenten uploaden',lbl_t3:'Controleer & Verstuur',lbl_d1:'Vul uw persoonlijke en bedrijfsgegevens in.',lbl_d2:'Upload alle verplichte documenten en vul de geldigheidsdatums in.',lbl_d3:'Controleer uw gegevens voordat u verstuurt.',lbl_adres:'Adres',lbl_telefoon:'Telefoonnummer',lbl_voornaam:'Voornaam',lbl_achternaam:'Achternaam',lbl_geboortedatum:'Geboortedatum',lbl_geboorteplaats:'Geboorteplaats',lbl_email:'E-mailadres',lbl_regtype:'Registratietype',lbl_kvk:'KvK-nummer',lbl_btw:'BTW-nummer',lbl_regon:'REGON-nummer',lbl_nip:'NIP-nummer',lbl_opt1:'(optioneel)',lbl_opt2:'(optioneel)',lbl_send:'Versturen naar GTO',sendingTxt:'Verzenden naar GTO Nederland...',lbl_success_title:'Aanmelding ontvangen!',lbl_btnNext1:'Volgende',lbl_btnNext2:'Controleren',lbl_ref:'Referentie:',err_req:'Verplicht',err_email:'Ongeldig e-mailadres',err_kvk:'Verplicht (8 cijfers)',err_regon:'Verplicht (9 of 14 cijfers)',drag:'Sleep bestand hiernaartoe',browse:'Tik om te bladeren',uploaded_lbl:'Geüpload:',of_lbl:'van',id_lbl:'Identiteitsbewijs',id_nr:'Documentnummer',id_geldig:'Geldig tot',id_id:'ID kaart',id_passport:'Paspoort',geldig_tot:'Geldig tot',aangeschaft:'Aangeschaft op',alert_missing:'Upload eerst alle verplichte documenten:\n',successDesc_tpl:'Bedankt, {naam}. GTO Nederland heeft uw aanmelding ontvangen en neemt contact met u op.'},
-  en:{logoSub:'Contractor Registration',plbl1:'Details',plbl2:'Documents',plbl3:'Submit',lbl_s1:'Step 1 of 3',lbl_s2:'Step 2 of 3',lbl_s3:'Step 3 of 3',lbl_t1:'Your details',lbl_t2:'Upload documents',lbl_t3:'Review & Submit',lbl_d1:'Please fill in your personal and company details.',lbl_d2:'Upload all required documents and fill in validity dates.',lbl_d3:'Review your details before submitting.',lbl_adres:'Address',lbl_telefoon:'Phone number',lbl_voornaam:'First name',lbl_achternaam:'Last name',lbl_geboortedatum:'Date of birth',lbl_geboorteplaats:'Place of birth',lbl_email:'Email address',lbl_regtype:'Registration type',lbl_kvk:'KvK number',lbl_btw:'VAT number',lbl_regon:'REGON number',lbl_nip:'NIP number',lbl_opt1:'(optional)',lbl_opt2:'(optional)',lbl_send:'Submit to GTO',sendingTxt:'Sending to GTO Nederland...',lbl_success_title:'Registration received!',lbl_btnNext1:'Next',lbl_btnNext2:'Review',lbl_ref:'Reference:',err_req:'Required',err_email:'Invalid email address',err_kvk:'Required (8 digits)',err_regon:'Required (9 or 14 digits)',drag:'Drop file here',browse:'Tap to browse',uploaded_lbl:'Uploaded:',of_lbl:'of',id_lbl:'Identity document',id_nr:'Document number',id_geldig:'Valid until',id_id:'ID card',id_passport:'Passport',geldig_tot:'Valid until',aangeschaft:'Purchased on',alert_missing:'Please upload all required documents first:\n',successDesc_tpl:'Thank you, {naam}. GTO Nederland has received your registration.'},
-  pl:{logoSub:'Rejestracja Montera',plbl1:'Dane',plbl2:'Dokumenty',plbl3:'Wyślij',lbl_s1:'Krok 1 z 3',lbl_s2:'Krok 2 z 3',lbl_s3:'Krok 3 z 3',lbl_t1:'Twoje dane',lbl_t2:'Prześlij dokumenty',lbl_t3:'Sprawdź i wyślij',lbl_d1:'Wypełnij swoje dane osobowe i firmowe.',lbl_d2:'Prześlij wszystkie wymagane dokumenty i podaj daty ważności.',lbl_d3:'Sprawdź swoje dane przed wysłaniem.',lbl_adres:'Adres',lbl_telefoon:'Numer telefonu',lbl_voornaam:'Imię',lbl_achternaam:'Nazwisko',lbl_geboortedatum:'Data urodzenia',lbl_geboorteplaats:'Miejsce urodzenia',lbl_email:'Adres e-mail',lbl_regtype:'Typ rejestracji',lbl_kvk:'Numer KvK',lbl_btw:'Numer VAT',lbl_regon:'Numer REGON',lbl_nip:'Numer NIP',lbl_opt1:'(opcjonalne)',lbl_opt2:'(opcjonalne)',lbl_send:'Wyślij do GTO',sendingTxt:'Wysyłanie do GTO Nederland...',lbl_success_title:'Rejestracja otrzymana!',lbl_btnNext1:'Dalej',lbl_btnNext2:'Sprawdź',lbl_ref:'Numer ref.:',err_req:'Wymagane',err_email:'Nieprawidłowy adres e-mail',err_kvk:'Wymagane (8 cyfr)',err_regon:'Wymagane (9 lub 14 cyfr)',drag:'Upuść plik tutaj',browse:'Dotknij, aby przeglądać',uploaded_lbl:'Przesłano:',of_lbl:'z',id_lbl:'Dokument tożsamości',id_nr:'Numer dokumentu',id_geldig:'Ważny do',id_id:'Dowód osobisty',id_passport:'Paszport',geldig_tot:'Ważny do',aangeschaft:'Zakupiono dnia',alert_missing:'Najpierw prześlij wszystkie wymagane dokumenty:\n',successDesc_tpl:'Dziękujemy, {naam}. GTO Nederland otrzymało Twoją rejestrację.'}
+  nl:{logoSub:'Monteur Registratie',plbl1:'Gegevens',plbl2:'Documenten',plbl3:'Versturen',lbl_s1:'Stap 1 van 3',lbl_s2:'Stap 2 van 3',lbl_s3:'Stap 3 van 3',lbl_t1:'Uw gegevens',lbl_t2:'Documenten uploaden',lbl_t3:'Controleer & Verstuur',lbl_d1:'Vul uw persoonlijke en bedrijfsgegevens in.',lbl_d2:'Upload alle verplichte documenten en vul de geldigheidsdatums in.',lbl_d3:'Controleer uw gegevens voordat u verstuurt.',lbl_adres:'Adres',lbl_telefoon:'Telefoonnummer',lbl_opt_tel:'(optioneel)',lbl_anders_tab:'Anders',lbl_anders_sub:'Internationaal',lbl_handelsreg:'Handelsregister Nummer',lbl_belasting:'Belasting Nummer',lbl_opt3:'(optioneel)',lbl_voornaam:'Voornaam',lbl_achternaam:'Achternaam',lbl_geboortedatum:'Geboortedatum',lbl_geboorteplaats:'Geboorteplaats',lbl_email:'E-mailadres',lbl_regtype:'Registratietype',lbl_kvk:'KvK-nummer',lbl_btw:'BTW-nummer',lbl_regon:'REGON-nummer',lbl_nip:'NIP-nummer',lbl_opt1:'(optioneel)',lbl_opt2:'(optioneel)',lbl_send:'Versturen naar GTO',sendingTxt:'Verzenden naar GTO Nederland...',lbl_success_title:'Aanmelding ontvangen!',lbl_btnNext1:'Volgende',lbl_btnNext2:'Controleren',lbl_ref:'Referentie:',err_req:'Verplicht',err_email:'Ongeldig e-mailadres',err_kvk:'Verplicht (8 cijfers)',err_regon:'Verplicht (9 of 14 cijfers)',drag:'Sleep bestand hiernaartoe',browse:'Tik om te bladeren',uploaded_lbl:'Geüpload:',of_lbl:'van',id_lbl:'Identiteitsbewijs',id_nr:'Documentnummer',id_geldig:'Geldig tot',id_id:'ID kaart',id_passport:'Paspoort',geldig_tot:'Geldig tot',aangeschaft:'Aangeschaft op',alert_missing:'Upload eerst alle verplichte documenten:\n',successDesc_tpl:'Bedankt, {naam}. GTO Nederland heeft uw aanmelding ontvangen en neemt contact met u op.'},
+  en:{logoSub:'Contractor Registration',plbl1:'Details',plbl2:'Documents',plbl3:'Submit',lbl_s1:'Step 1 of 3',lbl_s2:'Step 2 of 3',lbl_s3:'Step 3 of 3',lbl_t1:'Your details',lbl_t2:'Upload documents',lbl_t3:'Review & Submit',lbl_d1:'Please fill in your personal and company details.',lbl_d2:'Upload all required documents and fill in validity dates.',lbl_d3:'Review your details before submitting.',lbl_adres:'Address',lbl_telefoon:'Phone number',lbl_opt_tel:'(optional)',lbl_anders_tab:'Other',lbl_anders_sub:'International',lbl_handelsreg:'Trade Register Number',lbl_belasting:'Tax Number',lbl_opt3:'(optional)',lbl_voornaam:'First name',lbl_achternaam:'Last name',lbl_geboortedatum:'Date of birth',lbl_geboorteplaats:'Place of birth',lbl_email:'Email address',lbl_regtype:'Registration type',lbl_kvk:'KvK number',lbl_btw:'VAT number',lbl_regon:'REGON number',lbl_nip:'NIP number',lbl_opt1:'(optional)',lbl_opt2:'(optional)',lbl_send:'Submit to GTO',sendingTxt:'Sending to GTO Nederland...',lbl_success_title:'Registration received!',lbl_btnNext1:'Next',lbl_btnNext2:'Review',lbl_ref:'Reference:',err_req:'Required',err_email:'Invalid email address',err_kvk:'Required (8 digits)',err_regon:'Required (9 or 14 digits)',drag:'Drop file here',browse:'Tap to browse',uploaded_lbl:'Uploaded:',of_lbl:'of',id_lbl:'Identity document',id_nr:'Document number',id_geldig:'Valid until',id_id:'ID card',id_passport:'Passport',geldig_tot:'Valid until',aangeschaft:'Purchased on',alert_missing:'Please upload all required documents first:\n',successDesc_tpl:'Thank you, {naam}. GTO Nederland has received your registration.'},
+  pl:{logoSub:'Rejestracja Montera',plbl1:'Dane',plbl2:'Dokumenty',plbl3:'Wyślij',lbl_s1:'Krok 1 z 3',lbl_s2:'Krok 2 z 3',lbl_s3:'Krok 3 z 3',lbl_t1:'Twoje dane',lbl_t2:'Prześlij dokumenty',lbl_t3:'Sprawdź i wyślij',lbl_d1:'Wypełnij swoje dane osobowe i firmowe.',lbl_d2:'Prześlij wszystkie wymagane dokumenty i podaj daty ważności.',lbl_d3:'Sprawdź swoje dane przed wysłaniem.',lbl_adres:'Adres',lbl_telefoon:'Numer telefonu',lbl_opt_tel:'(opcjonalne)',lbl_anders_tab:'Inne',lbl_anders_sub:'Międzynarodowe',lbl_handelsreg:'Numer rejestru handlowego',lbl_belasting:'Numer podatkowy',lbl_opt3:'(opcjonalne)',lbl_voornaam:'Imię',lbl_achternaam:'Nazwisko',lbl_geboortedatum:'Data urodzenia',lbl_geboorteplaats:'Miejsce urodzenia',lbl_email:'Adres e-mail',lbl_regtype:'Typ rejestracji',lbl_kvk:'Numer KvK',lbl_btw:'Numer VAT',lbl_regon:'Numer REGON',lbl_nip:'Numer NIP',lbl_opt1:'(opcjonalne)',lbl_opt2:'(opcjonalne)',lbl_send:'Wyślij do GTO',sendingTxt:'Wysyłanie do GTO Nederland...',lbl_success_title:'Rejestracja otrzymana!',lbl_btnNext1:'Dalej',lbl_btnNext2:'Sprawdź',lbl_ref:'Numer ref.:',err_req:'Wymagane',err_email:'Nieprawidłowy adres e-mail',err_kvk:'Wymagane (8 cyfr)',err_regon:'Wymagane (9 lub 14 cyfr)',drag:'Upuść plik tutaj',browse:'Dotknij, aby przeglądać',uploaded_lbl:'Przesłano:',of_lbl:'z',id_lbl:'Dokument tożsamości',id_nr:'Numer dokumentu',id_geldig:'Ważny do',id_id:'Dowód osobisty',id_passport:'Paszport',geldig_tot:'Ważny do',aangeschaft:'Zakupiono dnia',alert_missing:'Najpierw prześlij wszystkie wymagane dokumenty:\n',successDesc_tpl:'Dziękujemy, {naam}. GTO Nederland otrzymało Twoją rejestrację.'}
 };
 
 let lang = 'nl';
@@ -432,15 +450,22 @@ const DOC_CONFIG = {
   kvk: [
     {key:'kvkdoc', icon:'', nameKey:'KvK Uittreksel', subKey:'Uittreksel', datumKey:'kvkdoc_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
     {key:'vca',    icon:'',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
-    {key:'polis',  icon:'', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
+    {key:'polis',  icon:'', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true,  hasJaNee:true},
     {key:'id',     icon:'', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
   ],
   regon: [
-    {key:'ceidg',  icon:'', nameKey:'Ceidg document', subKey:'Ceidg', datumKey:'ceidg_datum', datumLabel:'aangeschaft', hasUpload:true, required:true},
-    {key:'vca',    icon:'',   nameKey:'VCA',             subKey:'Certificaat', datumKey:'vca_geldig',   datumLabel:'geldig_tot', hasUpload:true, required:true},
-    {key:'polis',  icon:'', nameKey:'Polis',           subKey:'Verzekering', datumKey:'polis_geldig', datumLabel:'geldig_tot', hasUpload:true, required:false, hasJaNee:true},
-    {key:'id',     icon:'', nameKey:'ID',              subKey:'Identiteitsbewijs', datumKey:'id_geldig', datumLabel:'geldig_tot', hasUpload:false, required:true},
-    {key:'a1',     icon:'', nameKey:'A1 Verklaring',   subKey:'A1', datumKey:'a1_geldig', datumLabel:'geldig_tot', hasUpload:true, required:true},
+    {key:'ceidg',  icon:'', nameKey:'Ceidg document',             subKey:'Ceidg',          datumKey:'ceidg_datum',     datumLabel:'aangeschaft', hasUpload:true,  required:true},
+    {key:'vca',    icon:'', nameKey:'VCA',                        subKey:'Certificaat',     datumKey:'vca_geldig',      datumLabel:'geldig_tot',  hasUpload:true,  required:true},
+    {key:'polis',  icon:'', nameKey:'Polis',                      subKey:'Verzekering',     datumKey:'polis_geldig',    datumLabel:'geldig_tot',  hasUpload:true,  required:true,  hasJaNee:true},
+    {key:'id',     icon:'', nameKey:'ID',                         subKey:'Identiteitsbewijs', datumKey:'id_geldig',     datumLabel:'geldig_tot',  hasUpload:false, required:true},
+    {key:'a1',     icon:'', nameKey:'A1 Verklaring',              subKey:'A1',              datumKey:'a1_geldig',       datumLabel:'geldig_tot',  hasUpload:true,  required:true},
+  ],
+  anders: [
+    {key:'handelsreg', icon:'', nameKey:'Handelsregister Uittreksel', subKey:'Uittreksel',  datumKey:'handelsreg_datum', datumLabel:'aangeschaft', hasUpload:true,  required:true},
+    {key:'vca',    icon:'', nameKey:'VCA',                        subKey:'Certificaat',     datumKey:'vca_geldig',      datumLabel:'geldig_tot',  hasUpload:true,  required:true},
+    {key:'polis',  icon:'', nameKey:'Polis',                      subKey:'Verzekering',     datumKey:'polis_geldig',    datumLabel:'geldig_tot',  hasUpload:true,  required:true,  hasJaNee:true},
+    {key:'id',     icon:'', nameKey:'ID',                         subKey:'Identiteitsbewijs', datumKey:'id_geldig',     datumLabel:'geldig_tot',  hasUpload:false, required:true},
+    {key:'a1',     icon:'', nameKey:'A1 Verklaring',              subKey:'A1',              datumKey:'a1_geldig',       datumLabel:'geldig_tot',  hasUpload:true,  required:false},
   ]
 };
 
@@ -477,7 +502,7 @@ function setLang(l, silent){
   lang = l;
   ['nl','en','pl'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===l));
   const t = T[l];
-  const ids = ['logoSub','plbl1','plbl2','plbl3','lbl_s1','lbl_s2','lbl_s3','lbl_t1','lbl_t2','lbl_t3','lbl_d1','lbl_d2','lbl_d3','lbl_adres','lbl_telefoon','lbl_opt_tel','lbl_voornaam','lbl_achternaam','lbl_geboortedatum','lbl_geboorteplaats','lbl_email','lbl_regtype','lbl_kvk','lbl_btw','lbl_regon','lbl_nip','lbl_opt1','lbl_opt2','lbl_send','sendingTxt','lbl_success_title','lbl_ref','lbl_btnNext1','lbl_btnNext2'];
+  const ids = ['logoSub','plbl1','plbl2','plbl3','lbl_s1','lbl_s2','lbl_s3','lbl_t1','lbl_t2','lbl_t3','lbl_d1','lbl_d2','lbl_d3','lbl_adres','lbl_telefoon','lbl_opt_tel','lbl_anders_tab','lbl_anders_sub','lbl_handelsreg','lbl_belasting','lbl_opt3','lbl_voornaam','lbl_achternaam','lbl_geboortedatum','lbl_geboorteplaats','lbl_email','lbl_regtype','lbl_kvk','lbl_btw','lbl_regon','lbl_nip','lbl_opt1','lbl_opt2','lbl_send','sendingTxt','lbl_success_title','lbl_ref','lbl_btnNext1','lbl_btnNext2'];
   ids.forEach(id=>{const el=document.getElementById(id);if(el&&t[id]!==undefined)el.textContent=t[id];});
   document.getElementById('e_vnaam').textContent=t.err_req;
   document.getElementById('e_anaam').textContent=t.err_req;
@@ -486,8 +511,6 @@ function setLang(l, silent){
   document.getElementById('e_email').textContent=t.err_email;
   document.getElementById('e_kvk').textContent=t.err_kvk;
   document.getElementById('e_regon').textContent=t.err_regon;
-  const eTel = document.getElementById('e_telefoon');
-  if(eTel) eTel.textContent=t.err_req;
   document.documentElement.lang=l;
   if(!silent) buildDocGrid();
 }
@@ -520,10 +543,13 @@ function retranslateDocs(){
 
 function setRegType(type){
   regType = type;
-  document.getElementById('tab-kvk').classList.toggle('active', type==='kvk');
-  document.getElementById('tab-regon').classList.toggle('active', type==='regon');
-  document.getElementById('kvk-fields').style.display = type==='kvk'?'block':'none';
-  document.getElementById('regon-fields').style.display = type==='regon'?'block':'none';
+  ['kvk','regon','anders'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    if(el) el.classList.toggle('active', t===type);
+  });
+  document.getElementById('kvk-fields').style.display    = type==='kvk'    ? 'block' : 'none';
+  document.getElementById('regon-fields').style.display  = type==='regon'  ? 'block' : 'none';
+  document.getElementById('anders-fields').style.display = type==='anders' ? 'block' : 'none';
   uploadedFiles = {};
   polisJaNee = null;
   extraFiles = [];
@@ -631,7 +657,7 @@ function buildDocGrid(){
           </div>
         </div>
         <div class="doc-right">
-          <span class="doc-badge badge-req">${t.err_req.replace('Verplicht','Verplicht').replace('Required','Required').replace('Wymagane','Wymagane')}</span>
+          <span class="doc-badge ${doc.required ? 'badge-req' : 'badge-opt'}">${doc.required ? (t.err_req||'Verplicht') : (t.lbl_optional||'Optioneel')}</span>
           <div class="doc-dot" id="dot-${doc.key}"></div>
         </div>
       </div>
@@ -764,17 +790,20 @@ function toStep2(){
   ok=req('geboortedatum','e_gbd')&&ok;
   ok=req('geboorteplaats','e_gbp')&&ok;
   if(!val('adres')){show('e_adres');document.getElementById('adres').style.borderColor='var(--red)';ok=false;}else{hide('e_adres');document.getElementById('adres').style.borderColor='var(--border)';}
-  if(!val('telefoon')){show('e_telefoon');ok=false;}else{hide('e_telefoon');}
   const em=val('email');
   if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){show('e_email');mark('email');ok=false;}else{hide('e_email');unmark('email');}
+  if(!val('telefoon')){show('e_tel');mark('telefoon');ok=false;}else{hide('e_tel');unmark('telefoon');}
   if(regType==='kvk'){
     const kv=val('kvknummer');
     if(!kv||!/^\d{8}$/.test(kv)){show('e_kvk');mark('kvknummer');ok=false;}else{hide('e_kvk');unmark('kvknummer');}
     if(!val('btwnummer')){show('e_btw');mark('btwnummer');ok=false;}else{hide('e_btw');unmark('btwnummer');}
-  } else {
+  } else if(regType==='regon') {
     const rg=val('regonnummer');
-    if(!rg||!/^\d{9}(\d{5})?$/.test(rg)){show('e_regon');mark('regonnummer');ok=false;}else{hide('e_regon');unmark('regonnummer');}
+    if(!rg){show('e_regon');mark('regonnummer');ok=false;}else{hide('e_regon');unmark('regonnummer');}
     if(!val('nipnummer')){show('e_nip');mark('nipnummer');ok=false;}else{hide('e_nip');unmark('nipnummer');}
+  } else if(regType==='anders') {
+    if(!val('handelsregnummer')){show('e_handelsreg');mark('handelsregnummer');ok=false;}else{hide('e_handelsreg');unmark('handelsregnummer');}
+    if(!val('belastingnummer')){show('e_belasting');mark('belastingnummer');ok=false;}else{hide('e_belasting');unmark('belastingnummer');}
   }
   if(!ok) return;
   buildDocGrid();
@@ -1003,6 +1032,8 @@ async function submitForm(){
     fd.append('btwnummer',val('btwnummer'));
     fd.append('regonnummer',val('regonnummer'));
     fd.append('nipnummer',val('nipnummer'));
+    fd.append('handelsregnummer',val('handelsregnummer'));
+    fd.append('belastingnummer',val('belastingnummer'));
     fd.append('id_type',idType);
     fd.append('id_nummer',document.getElementById('id_nummer')?document.getElementById('id_nummer').value:'');
     fd.append('id_geldig',document.getElementById('id_geldig')?document.getElementById('id_geldig').value:'');
@@ -1018,7 +1049,7 @@ async function submitForm(){
       if(el) fd.append(k+'_datum'||k+'_geldig', el.value);
     });
     // Specific datum field names for backend
-    ['kvkdoc','ceidg','vca','polis','a1'].forEach(k=>{
+    ['kvkdoc','ceidg','handelsreg','vca','polis','a1'].forEach(k=>{
       const el=document.getElementById('datum-'+k);
       if(!el) return;
       if(k==='kvkdoc') fd.set('kvkdoc_datum', el.value);
@@ -1028,7 +1059,7 @@ async function submitForm(){
       else if(k==='a1') fd.set('a1_geldig', el.value);
     });
     // Files
-    ['kvkdoc','ceidg','vca','polis','a1'].forEach(k=>{
+    ['kvkdoc','ceidg','handelsreg','vca','polis','a1'].forEach(k=>{
       if(uploadedFiles[k]&&uploadedFiles[k].name) fd.append(k,uploadedFiles[k],uploadedFiles[k].name);
     });
     // Extra/aanvullende documenten
